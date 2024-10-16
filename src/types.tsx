@@ -5,12 +5,14 @@ export  type PostType = {
 	message: string,
 	likesCount: string
 }
-
-export  type Dialog = {
+export  type DialogsPageState = {
+	dialogs: DialogType[];
+}
+export  type DialogType = {
 	id: number, name: string
 }
 
-export  type DialogsType = Array<Dialog>
+export  type DialogsType = Array<DialogType>
 
 export  type MessageType = {
 	id: number

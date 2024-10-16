@@ -5,47 +5,58 @@ import Navbar from './components/Navbar/Navbar'
 import Profile from './components/Profile/Profile'
 import {Route, Routes, useLocation} from 'react-router-dom'
 import {DialogsType, MessagesType, PostsType} from './types'
-import {Button, Flex, Layout, Menu} from 'antd'
+import {Layout} from 'antd'
 import Dialogs from './components/Dialogs/Dialogs'
 import Translator from './components/Translator/Translator'
-//35-36
+
 const {Content} = Layout
+
 type AppProps = {
-	posts: PostsType
-	newPostText: string
-	dialogs: DialogsType
-	messages: MessagesType
-	addPost: () => void
-	changeNewPostText: (newPostText: string) => void
-	newMessageText: string
-	changeNewMessageText: (newMessageText: string) => void
-	addMessage: () => void
+	posts: PostsType;
+	newPostText: string;
+	dialogs: DialogsType;
+	messages: MessagesType;
+	addPost: () => void;
+	changeNewPostText: (newPostText: string) => void;
+	newMessageText: string;
+	changeNewMessageText: (newMessageText: string) => void;
+	addMessage: () => void;
 };
 
 const App: React.FC<AppProps> = ({
 	newMessageText,
-	changeNewPostText, posts, dialogs
-	, changeNewMessageText, messages, addPost, newPostText, addMessage
+	changeNewPostText,
+	posts,
+	dialogs,
+	changeNewMessageText,
+	messages,
+	addPost,
+	newPostText,
+	addMessage
 }) => {
 	const location = useLocation()
+
 	return (
 		<Layout>
 			<div className="app-wrapper">
 				<Header/>
 				{location.pathname.startsWith('/sn') && <Navbar/>}
-
 				<Content>
 					<div className="app-wrapper-content">
 						<Routes>
 							<Route path="/sn/dialogs" element={<Dialogs
-								dialogs={dialogs} addMessage={addMessage}
+								dialogs={dialogs}
+								addMessage={addMessage}
 								messages={messages}
 								changeNewMessageText={changeNewMessageText}
-								newMessageText={newMessageText}/>}/>
+								newMessageText={newMessageText}
+							/>}/>
 							<Route path="/sn/profile" element={<Profile
-								posts={posts} addPost={addPost}
+								posts={posts}
+								addPost={addPost}
 								newPostText={newPostText}
-								changeNewPostText={changeNewPostText}/>}/>
+								changeNewPostText={changeNewPostText}
+							/>}/>
 							<Route path="/translator" element={<Translator/>}/>
 						</Routes>
 					</div>
