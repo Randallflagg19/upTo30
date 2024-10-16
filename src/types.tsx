@@ -31,3 +31,14 @@ export type StateType = {
 	}
 
 }
+
+export type StoreType = {
+	state: StateType;
+	rerenderTree: (state: StateType) => void;
+	changeNewPostText: (newPostText: string) => void;
+	subscribe: (observer: (state: StateType) => void) => void;
+	changeNewMessageText: (newMessageText: string) => void;
+	addPost: () => void;
+	addMessage: () => void;
+};
+export type ObserverType = (state: StateType) => void

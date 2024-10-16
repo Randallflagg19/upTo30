@@ -3,12 +3,13 @@ import './App.css'
 import Header from './components/Header/Header'
 import Navbar from './components/Navbar/Navbar'
 import Profile from './components/Profile/Profile'
-import Dialogs from './components/Dialogs/Dialogs'
-import {Route, Routes} from 'react-router-dom'
+import {Route, Routes, useLocation} from 'react-router-dom'
 import {DialogsType, MessagesType, PostsType} from './types'
 import {Button, Flex, Layout, Menu} from 'antd'
+import Dialogs from './components/Dialogs/Dialogs'
+import Translator from './components/Translator/Translator'
 //35-36
-const {Content, Footer} = Layout
+const {Content} = Layout
 type AppProps = {
 	posts: PostsType
 	newPostText: string
@@ -21,38 +22,35 @@ type AppProps = {
 	addMessage: () => void
 };
 
-const items = new Array(3).fill(null).map((_, index) => ({
-	key: index + 1,
-	label: `nav ${index + 1}`
-}))
-
 const App: React.FC<AppProps> = ({
 	newMessageText,
 	changeNewPostText, posts, dialogs
 	, changeNewMessageText, messages, addPost, newPostText, addMessage
 }) => {
+	const location = useLocation()
 	return (
 		<Layout>
 			<div className="app-wrapper">
 				<Header/>
-				<Navbar/>
+				{location.pathname.startsWith('/sn') && <Navbar/>}
+
 				<Content>
 					<div className="app-wrapper-content">
 						<Routes>
-							<Route path="/dialogs" element={<Dialogs
+							<Route path="/sn/dialogs" element={<Dialogs
 								dialogs={dialogs} addMessage={addMessage}
 								messages={messages}
 								changeNewMessageText={changeNewMessageText}
 								newMessageText={newMessageText}/>}/>
-							<Route path="/profile" element={<Profile
+							<Route path="/sn/profile" element={<Profile
 								posts={posts} addPost={addPost}
 								newPostText={newPostText}
 								changeNewPostText={changeNewPostText}/>}/>
+							<Route path="/translator" element={<Translator/>}/>
 						</Routes>
 					</div>
 				</Content>
 			</div>
-			<Footer></Footer>
 		</Layout>
 	)
 }
