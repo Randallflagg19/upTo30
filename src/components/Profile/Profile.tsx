@@ -6,14 +6,17 @@ import {PostsType} from '../../types'
 
 type ProfileProps = {
 	posts: PostsType
-	addPost: (message: string) => void
+	addPost: () => void
+	newPostText: string
+	changeNewPostText: (newPostText: string) => void
 };
 
-const Profile: React.FC<ProfileProps> = ({posts, addPost}) => {
+const Profile: React.FC<ProfileProps> = ({changeNewPostText, posts, addPost, newPostText}) => {
 	return (
 		<div className={styles.content}>
 			<ProfileInfo/>
-			<MyPosts posts={posts} addPost={addPost}/>
+			<MyPosts changeNewPostText={changeNewPostText} posts={posts} addPost={addPost}
+			         newPostText={newPostText}/>
 		</div>
 	)
 }

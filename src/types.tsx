@@ -22,8 +22,12 @@ export  type MessagesType = Array<MessageType>
 export type StateType = {
 	profilePage: {
 		posts: PostsType
+		newPostText: string
 		dialogs: DialogsType
 	}
-	messagePage: { messages: MessagesType }
+	messagePage: {
+		messages: MessagesType
+		newMessageText: string
+	}
 
 }

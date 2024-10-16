@@ -1,17 +1,26 @@
 .header {
     grid-area: h;
-    background-color: green;
 }
 
-.header img {
-    width: 20px;
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #001529; /* Цвет фона для меню */
+}
+
+.logo {
+    width: 40px; /* Ширина логотипа */
+    border-radius: 7px;
+    height: auto;
+    margin-right: 20px; /* Отступ между логотипом и меню */
 }
 
 .loginBlock {
-    /*float: right;*/
-
+    margin-left: auto; /* Сдвигает блок с логином вправо */
+    margin-right: 20px; /* Отступ справа от блока логина */
 }
 
-.loginBlock a {
-    color: white;
-}
+
+
+

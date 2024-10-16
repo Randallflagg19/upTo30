@@ -1,5 +1,8 @@
-import {PostType, StateType} from './types'
-import {rerenderTree} from './render'
+import {MessageType, PostType, StateType} from './types'
+
+let rerenderTree = (state: StateType) => {
+	console.log('state changed')
+}
 
 export const state: StateType = {
 	profilePage: {
@@ -9,7 +12,7 @@ export const state: StateType = {
 			{id: 3, message: '3d post', likesCount: '14'},
 			{id: 4, message: 'forth post', likesCount: '0'},
 			{id: 5, message: 'fifth post', likesCount: '22'}],
-
+		newPostText: '',
 		dialogs: [
 			{id: 1, name: 'name1'},
 			{id: 2, name: 'name2'},
@@ -24,19 +27,45 @@ export const state: StateType = {
 			{id: 2, message: 'message2'},
 			{id: 3, message: 'message3'},
 			{id: 4, message: 'message4'},
-			{id: 5, message: 'message5'}]
+			{id: 5, message: 'message5'}],
+		newMessageText: ''
 	}
 }
 
-export const addPost = (postMessage: string) => {
-	debugger
+export const addPost = () => {
 	const newPost: PostType = {
-		id: 6,
-		message: postMessage,
+		id: state.profilePage.posts.length + 1,
+		message: state.profilePage.newPostText,
 		likesCount: '0'
 	}
-
 	state.profilePage.posts.push(newPost)
+	state.profilePage.newPostText = ''
 	rerenderTree(state)
-
 }
+
+export const changeNewPostText = (newPostText: string) => {
+	state.profilePage.newPostText = newPostText
+	rerenderTree(state)
+}
+
+export const subscribe = (observer: (state: StateType) => void) => {
+	rerenderTree = observer
+}
+
+export const addMessage = () => {
+	const newMessage: MessageType = {
+		id: 6,
+		message: state.messagePage.newMessageText
+	}
+	state.messagePage.messages.push(newMessage)
+	state.messagePage.newMessageText = ''
+	rerenderTree(state)
+}
+
+export const changeNewMessageText = (newMessageText: string) => {
+	state.messagePage.newMessageText = newMessageText
+	rerenderTree(state)
+}
+
+// @ts-ignore
+window.state = state
