@@ -2,20 +2,26 @@ import React, {useRef} from 'react'
 import styles from './Dialogs.module.css'
 import DialogItem from './DialogItem/DialogItem'
 import Message from './Message/Message'
-import {DialogsType, MessagesType} from '../../types'
+import {useDispatch, useSelector} from 'react-redux'
+import {selectDialogs} from '../../Redux/dialogsSlice'
+import {
+	addMessage,
+	changeNewMessageText,
+	selectMessages,
+	selectNewMessageText
+} from '../../Redux/messageSlice'
 
-type Props = {
-	dialogs: DialogsType
-	messages: MessagesType
-	newMessageText: string
-	changeNewMessageText: (newMessageText: string) => void
-	addMessage: () => void
-}
+type DialogsProps = {}
 
-const Dialogs: React.FC<Props> = ({
-	dialogs, messages,
-	newMessageText, changeNewMessageText, addMessage
-}) => {
+const Dialogs: React.FC<DialogsProps> = () => {
+
+	const dispatch = useDispatch()
+	const messages = useSelector(selectMessages)
+	const newMessageText = useSelector(selectNewMessageText)
+	const sendMessage = () => dispatch(addMessage())
+	const updateNewMessageText = (text: string) => dispatch(changeNewMessageText(text))
+
+	const dialogs = useSelector(selectDialogs)
 
 	const newMessageElement = useRef<HTMLTextAreaElement>(null)
 
@@ -28,7 +34,7 @@ const Dialogs: React.FC<Props> = ({
 
 	const onMessageChange = () => {
 		if (newMessageElement.current) {
-			changeNewMessageText(newMessageElement.current.value)
+			updateNewMessageText(newMessageElement.current.value)
 		}
 	}
 
@@ -40,7 +46,7 @@ const Dialogs: React.FC<Props> = ({
 			<div className={styles.messages}>
 				{messagesElements}
 				<textarea onChange={onMessageChange} ref={newMessageElement} value={newMessageText}/>
-				<button onClick={() => addMessage()}>Add message</button>
+				<button onClick={() => sendMessage()}>Add message</button>
 			</div>
 		</div>
 

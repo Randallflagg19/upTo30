@@ -19,4 +19,4 @@ const dialogsSlice = createSlice({
 	reducers: {}
 })
 export const selectDialogs = (state: RootState) => state.dialogsPage.dialogs
-export default dialogsSlice.reducer
+export const dialogsReducer = dialogsSlice.reducer

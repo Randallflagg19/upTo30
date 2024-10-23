@@ -40,4 +40,4 @@ export const selectMessages = (state: RootState) => state.messagePage.messages
 export const selectNewMessageText = (state: RootState) => state.messagePage.newMessageText
 
 export const {changeNewMessageText, addMessage} = messageSlice.actions
-export default messageSlice.reducer
+export const messageReducer = messageSlice.reducer

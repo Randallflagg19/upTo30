@@ -1,0 +1,18 @@
+/** {*/
+/*  box-sizing: border-box;*/
+/*  background-color: rgb(44, 155, 206);*/
+/*}*/
+
+#root {
+    display: flex;
+    justify-content: center;
+}
+
+.App {
+    width: 100%;
+    max-width: 800px;
+}
+
+
+
+

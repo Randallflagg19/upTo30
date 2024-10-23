@@ -1,28 +1,32 @@
-import React, {useRef} from 'react'
+import React, {useReducer, useRef} from 'react'
 import styles from './MyPosts.module.css'
 import Post from './Post/Post'
 import {PostsType} from '../../../types'
 import {Button} from 'antd'
 import TextArea from 'antd/es/input/TextArea'
+import {useDispatch, useSelector} from 'react-redux'
+import {
+	addPost,
+	changeNewPostText,
+	selectNewPostText,
+	selectPosts
+} from '../../../Redux/profileSlice'
 
-type MyPostsProps = {
-	posts: PostsType
-	addPost: () => void
-	newPostText: string
-	changeNewPostText: (text: string) => void;
-};
+type MyPostsProps = {};
 
-const MyPosts: React.FC<MyPostsProps> = ({
-	posts, addPost, newPostText,
-	changeNewPostText
-}) => {
+const MyPosts: React.FC = () => {
+	const dispatch = useDispatch()
+	const posts = useSelector(selectPosts)
+	const newPostText = useSelector(selectNewPostText)
+	const addNewPost = () => dispatch(addPost())
+	const updateNewPostText = (text: string) => dispatch(changeNewPostText(text))
 
 	const postsElements = posts.map(post => (
 		<Post key={post.id} id={post.id} message={post.message} likesCount={post.likesCount}/>
 	))
 
 	const onPostChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-		changeNewPostText(event.target.value)
+		updateNewPostText(event.target.value)
 	}
 
 	return (
@@ -37,7 +41,7 @@ const MyPosts: React.FC<MyPostsProps> = ({
 						value={newPostText}
 					/>
 				</div>
-				<Button style={{marginTop: '10px'}} type="primary" onClick={addPost}>Add post</Button>
+				<Button style={{marginTop: '10px'}} type="primary" onClick={addNewPost}>Add post</Button>
 			</div>
 			<div className={styles.posts}>
 				{postsElements}

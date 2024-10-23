@@ -1,14 +1,14 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styles from './Header.module.css'
 import {NavLink} from 'react-router-dom'
-import {Menu} from 'antd'
+import {Menu, Avatar} from 'antd'
 
-export default function Header(props: any) {
-	const items = [
-		{key: '1', label: <NavLink to="/sn/profile">Social network</NavLink>},
-		{key: '2', label: <NavLink to="/translator">Translator</NavLink>},
-		{key: '3', label: <NavLink to="/">Home</NavLink>}
-	]
+export default function Header() {
+	const [selectedKey, setSelectedKey] = useState('1') // Начальное значение
+
+	const handleMenuClick = (e: { key: string }) => {
+		setSelectedKey(e.key) // Обновляем выбранный пункт
+	}
 
 	return (
 		<header className={styles.header}>
@@ -17,16 +17,35 @@ export default function Header(props: any) {
 				alt="Logo"
 				className={styles.logo}
 			/>
-			<Menu
-				theme="dark"
-				mode="horizontal"
-				defaultSelectedKeys={['1']}
-				items={items}
-				className={styles.menu}
-			/>
-			<div className={styles.loginBlock}>
-				<NavLink to={'/login'}>Login</NavLink>
+			<div className={styles.menuContainer}>
+				<Menu
+					theme="dark"
+					mode="horizontal"
+					selectedKeys={[selectedKey]} // Используем состояние для выделения
+					onClick={handleMenuClick} // Обработчик клика
+					className={styles.menu}
+				>
+					<Menu.Item key="1">
+						<NavLink to="/sn/profile">Social network</NavLink>
+					</Menu.Item>
+					<Menu.Item key="2">
+						<NavLink to="/translator">Translator</NavLink>
+					</Menu.Item>
+					<Menu.Item key="3">
+						<NavLink to="/home">Home</NavLink>
+					</Menu.Item>
+				</Menu>
 			</div>
+			{selectedKey === '1' && ( // Условный рендеринг
+				<div className={styles.loginBlock}>
+					<Avatar style={{backgroundColor: 'green', verticalAlign: 'middle'}}>
+						A
+					</Avatar>
+					<button className={styles.loginButton}>
+						<NavLink style={{color: 'white'}} to={'/login'}>Login</NavLink>
+					</button>
+				</div>
+			)}
 		</header>
 	)
 }

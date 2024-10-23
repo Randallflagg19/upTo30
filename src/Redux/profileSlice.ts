@@ -36,9 +36,8 @@ const profileSlice = createSlice({
 		}
 	}
 })
+
 export const selectPosts = (state: RootState) => state.profilePage.posts
 export const selectNewPostText = (state: RootState) => state.profilePage.newPostText
-
-// Экспортируем действия и редюсер
 export const {changeNewPostText, addPost} = profileSlice.actions
-export default profileSlice.reducer
+export const profileReducer = profileSlice.reducer
