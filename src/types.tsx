@@ -44,3 +44,16 @@ export type StoreType = {
 	addMessage: () => void;
 };
 export type ObserverType = (state: StateType) => void
+
+export type UserType = {
+	name: string,
+	id: number,
+	photos: {
+		small: string | null,
+		big: string | null,
+	},
+	status: string | null,
+	followed: boolean
+}
+
+export type UsersPageState = { users: Array<UserType> }

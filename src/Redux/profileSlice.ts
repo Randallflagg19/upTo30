@@ -31,7 +31,7 @@ const profileSlice = createSlice({
 				message: state.newPostText,
 				likesCount: '0'
 			}
-			state.posts.push(newPost)
+			state.posts = [...state.posts, newPost]
 			state.newPostText = ''
 		}
 	}

@@ -6,7 +6,8 @@ import {Route, Routes, useLocation, Link, Navigate, useNavigate} from 'react-rou
 import Dialogs from './components/Dialogs/Dialogs'
 import Profile from './components/Profile/Profile'
 import Translator from './components/Translator/Translator'
-import Home from './components/Home/Home' // Импортируйте компонент Home
+import Home from './components/Home/Home'
+import Users from './components/Users/Users'
 
 const {Content, Sider} = Layout
 
@@ -16,7 +17,7 @@ const routes = [
 	{path: '/sn/news', component: <div>News</div>, label: 'News'},
 	{path: '/sn/music', component: <div>Music</div>, label: 'Music'},
 	{path: '/sn/settings', component: <div>Settings</div>, label: 'Settings'},
-	{path: '/sn/users', component: <div>Users</div>, label: 'Users'}
+	{path: '/sn/users', component: <Users/>, label: 'Users'}
 ]
 
 const App: React.FC = () => {

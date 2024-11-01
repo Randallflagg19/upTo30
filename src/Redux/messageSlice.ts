@@ -30,7 +30,7 @@ const messageSlice = createSlice({
 				id: state.messages.length + 1,
 				message: state.newMessageText
 			}
-			state.messages.push(newMessage)
+			state.messages = [...state.messages, newMessage]
 			state.newMessageText = ''
 		}
 	}
