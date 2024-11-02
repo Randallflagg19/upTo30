@@ -56,4 +56,9 @@ export type UserType = {
 	followed: boolean
 }
 
-export type UsersPageState = { users: Array<UserType> }
+export type UsersPageState = {
+	users: Array<UserType>,
+	pageSize: number,
+	totalUsersCount: number,
+	currentPage: number
+}

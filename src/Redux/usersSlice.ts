@@ -4,7 +4,10 @@ import {UsersPageState, UserType} from '../types'
 
 const initialState: UsersPageState =
 	{
-		users: []
+		users: [],
+		pageSize: 10,
+		totalUsersCount: 0,
+		currentPage: 1
 	}
 
 const usersSlice = createSlice({
@@ -31,10 +34,19 @@ const usersSlice = createSlice({
 		},
 		setUsers(state, action: PayloadAction<{ users: UserType[] }>) {
 			state.users = action.payload.users
+		},
+		setCurrentPage(state, action: PayloadAction<number>) {
+			state.currentPage = action.payload
+		},
+		setTotalUsersCount(state, action: PayloadAction<number>) {
+			state.totalUsersCount = action.payload
 		}
 	}
 })
 
 export const selectUsers = (state: RootState) => state.usersPage.users
-export const {follow, unfollow, updateStatus, setUsers} = usersSlice.actions
+export const selectTotalCount = (state: RootState) => state.usersPage.totalUsersCount
+export const selectCurrentPage = (state: RootState) => state.usersPage.currentPage
+export const selectPageSize = (state: RootState) => state.usersPage.pageSize
+export const {follow, unfollow, updateStatus, setUsers, setCurrentPage, setTotalUsersCount} = usersSlice.actions
 export const usersReducer = usersSlice.reducer
