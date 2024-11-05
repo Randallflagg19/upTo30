@@ -12,7 +12,7 @@ import Users from './components/Users/Users'
 const {Content, Sider} = Layout
 
 const routes = [
-	{path: '/sn/profile', component: <Profile/>, label: 'Profile'},
+	{path: '/sn/profile/:userId?', component: <Profile/>, label: 'Profile'},
 	{path: '/sn/dialogs', component: <Dialogs/>, label: 'Dialogs'},
 	{path: '/sn/news', component: <div>News</div>, label: 'News'},
 	{path: '/sn/music', component: <div>Music</div>, label: 'Music'},
@@ -75,7 +75,6 @@ const App: React.FC = () => {
 				return <Navigate to="/sn/profile"/>
 		}
 	}
-
 	return (
 		<Layout>
 			<Header/>

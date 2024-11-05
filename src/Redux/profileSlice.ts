@@ -5,6 +5,7 @@ import {RootState} from './store'
 type ProfilePageState = {
 	posts: PostType[];
 	newPostText: string;
+	profile: null | any
 }
 
 const initialState: ProfilePageState = {
@@ -15,7 +16,8 @@ const initialState: ProfilePageState = {
 		{id: 4, message: 'forth post', likesCount: '0'},
 		{id: 5, message: 'fifth post', likesCount: '22'}
 	],
-	newPostText: ''
+	newPostText: '',
+	profile: null
 }
 
 const profileSlice = createSlice({
@@ -33,11 +35,15 @@ const profileSlice = createSlice({
 			}
 			state.posts = [...state.posts, newPost]
 			state.newPostText = ''
+		},
+		setUserProfile(state, action: PayloadAction<any>) {
+			state.profile = action.payload
 		}
 	}
 })
 
 export const selectPosts = (state: RootState) => state.profilePage.posts
 export const selectNewPostText = (state: RootState) => state.profilePage.newPostText
-export const {changeNewPostText, addPost} = profileSlice.actions
+export const {changeNewPostText, addPost, setUserProfile} = profileSlice.actions
 export const profileReducer = profileSlice.reducer
+export const selectProfile = (state: RootState) => state.profilePage.profile

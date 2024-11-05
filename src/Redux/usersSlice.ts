@@ -7,7 +7,8 @@ const initialState: UsersPageState =
 		users: [],
 		pageSize: 10,
 		totalUsersCount: 0,
-		currentPage: 1
+		currentPage: 1,
+		isFetching: false
 	}
 
 const usersSlice = createSlice({
@@ -40,13 +41,20 @@ const usersSlice = createSlice({
 		},
 		setTotalUsersCount(state, action: PayloadAction<number>) {
 			state.totalUsersCount = action.payload
+		},
+		toggleIsFetching(state, action: PayloadAction<boolean>) {
+			state.isFetching = action.payload
 		}
 	}
 })
 
 export const selectUsers = (state: RootState) => state.usersPage.users
+export const selectIsFetching = (state: RootState) => state.usersPage.isFetching
 export const selectTotalCount = (state: RootState) => state.usersPage.totalUsersCount
 export const selectCurrentPage = (state: RootState) => state.usersPage.currentPage
 export const selectPageSize = (state: RootState) => state.usersPage.pageSize
-export const {follow, unfollow, updateStatus, setUsers, setCurrentPage, setTotalUsersCount} = usersSlice.actions
+export const {
+	follow, toggleIsFetching, unfollow, updateStatus,
+	setUsers, setCurrentPage, setTotalUsersCount
+} = usersSlice.actions
 export const usersReducer = usersSlice.reducer
