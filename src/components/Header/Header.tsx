@@ -1,14 +1,28 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './Header.module.css'
 import {NavLink} from 'react-router-dom'
 import {Menu, Avatar} from 'antd'
+import axios from 'axios'
+import {setUserProfile} from '../../Redux/profileSlice'
+import {useDispatch, useSelector} from 'react-redux'
+import {setAuthUserData, selectIsAuth, selectLogin} from '../../Redux/authSlice'
 
 export default function Header() {
-	const [selectedKey, setSelectedKey] = useState('1') // Начальное значение
+	const [selectedKey, setSelectedKey] = useState('1')
+	const isAuth = useSelector(selectIsAuth)
+	const loginFirstLetter = useSelector(selectLogin)
+	const dispatch = useDispatch()
+	useEffect(() => {
+		axios.get(`https://social-network.samuraijs.com/api/1.0/auth/me`,
+			{withCredentials: true})
+			.then((response) => {
+				console.log(response.data)
+				if (response.data.resultCode === 0)
+					dispatch(setAuthUserData(response.data))
 
-	const handleMenuClick = (e: { key: string }) => {
-		setSelectedKey(e.key) // Обновляем выбранный пункт
-	}
+			})
+
+	}, [])
 
 	return (
 		<header className={styles.header}>
@@ -21,12 +35,12 @@ export default function Header() {
 				<Menu
 					theme="dark"
 					mode="horizontal"
-					selectedKeys={[selectedKey]} // Используем состояние для выделения
-					onClick={handleMenuClick} // Обработчик клика
+					selectedKeys={[selectedKey]}
+					onClick={(e) => setSelectedKey(e.key)}
 					className={styles.menu}
 				>
 					<Menu.Item key="1">
-						<NavLink to="/sn/profile">Social network</NavLink>
+						<NavLink to="/sn/profile">Social Network</NavLink>
 					</Menu.Item>
 					<Menu.Item key="2">
 						<NavLink to="/translator">Translator</NavLink>
@@ -36,14 +50,19 @@ export default function Header() {
 					</Menu.Item>
 				</Menu>
 			</div>
-			{selectedKey === '1' && ( // Условный рендеринг
+			{selectedKey === '1' && (
 				<div className={styles.loginBlock}>
-					<Avatar style={{backgroundColor: 'green', verticalAlign: 'middle'}}>
-						A
-					</Avatar>
-					<button className={styles.loginButton}>
-						<NavLink style={{color: 'white'}} to={'/login'}>Login</NavLink>
-					</button>
+					{isAuth ? (
+						<Avatar style={{backgroundColor: 'green', verticalAlign: 'middle'}}>
+							{loginFirstLetter}
+						</Avatar>
+					) : (
+						<button className={styles.loginButton}>
+							<NavLink style={{color: 'white'}} to="/login">
+								Login
+							</NavLink>
+						</button>
+					)}
 				</div>
 			)}
 		</header>

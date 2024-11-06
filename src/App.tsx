@@ -24,11 +24,11 @@ const App: React.FC = () => {
 	const location = useLocation()
 	const navigate = useNavigate()
 
-	useEffect(() => {
-		if (location.pathname === '/') {
-			navigate('/sn/profile', {replace: true})
-		}
-	}, [location.pathname, navigate])
+	// useEffect(() => {
+	// 	if (location.pathname === '/') {
+	// 		navigate('/sn/profile', {replace: true})
+	// 	}
+	// }, [location.pathname, navigate])
 
 	const renderMenuItems = () =>
 		routes.map(route => (

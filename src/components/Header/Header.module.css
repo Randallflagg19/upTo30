@@ -20,8 +20,13 @@
     list-style: none;
     font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
     font-weight: 300;
+    width: auto; /* Или укажите фиксированную ширину, если требуется */
+    white-space: nowrap;
 }
 
+.menuContainer {
+    flex-grow: 1; /* Позволит контейнеру меню занимать доступное пространство */
+}
 
 .loginBlock {
     margin-left: auto;
