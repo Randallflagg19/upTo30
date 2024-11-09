@@ -3,22 +3,17 @@ import styles from './Header.module.css'
 import {NavLink} from 'react-router-dom'
 import {Menu, Avatar} from 'antd'
 import {useDispatch, useSelector} from 'react-redux'
-import {setAuthUserData, selectIsAuth, selectLogin} from '../../Redux/authSlice'
-import {checkAuth} from '../../api/api'
+import {selectIsAuth, selectLogin, checkAuthThunk} from '../../Redux/authSlice'
+import {AppDispatch} from '../../Redux/store'
 
 export default function Header() {
 	const [selectedKey, setSelectedKey] = useState('1')
 	const isAuth = useSelector(selectIsAuth)
 	const currentUserLogin = useSelector(selectLogin)
-	const dispatch = useDispatch()
+	const dispatch = useDispatch<AppDispatch>()
 
 	useEffect(() => {
-		checkAuth()
-			.then((response) => {
-				if (response.resultCode === 0) {
-					dispatch(setAuthUserData(response))
-				}
-			})
+		dispatch(checkAuthThunk())
 	}, [])
 
 	const menuItems = [
@@ -49,7 +44,7 @@ export default function Header() {
 					mode="horizontal"
 					selectedKeys={[selectedKey]}
 					onClick={(e) => setSelectedKey(e.key)}
-					items={menuItems} // Заменяем children на items
+					items={menuItems}
 					className={styles.menu}
 				/>
 			</div>

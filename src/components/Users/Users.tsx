@@ -18,7 +18,6 @@ import {Card, Button, List, Avatar, Input, Spin} from 'antd'
 import defaultAvatar from '../../assets/defaultAvatar.png'
 import Paginator from '../common/Paginator/Paginator'
 import {NavLink} from 'react-router-dom'
-import {usersAPI} from '../../api/api'
 import {AppDispatch} from '../../Redux/store'
 import styles from './Users.module.css'
 

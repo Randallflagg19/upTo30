@@ -1,5 +1,6 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {RootState} from './store'
+import {authAPI} from '../api/authAPI'
 
 type UserAuthInfo = {
 	id: number | null
@@ -24,6 +25,16 @@ const initialState: AuthState = {
 		isAuth: false
 	}
 }
+
+export const checkAuthThunk = createAsyncThunk(
+	'auth/checkAuth',
+	async (_, {dispatch}) => {
+		const response = await authAPI.checkAuth()
+		if (response.resultCode === 0) {
+			dispatch(setAuthUserData(response))
+		}
+	}
+)
 
 const authSlice = createSlice({
 	name: 'auth',

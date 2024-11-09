@@ -1,9 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {RootState} from './store'
 import {UsersPageState, UserType} from '../types'
-import {usersAPI} from '../api/api'
-import {useEffect} from 'react'
-import {useDispatch} from 'react-redux'
+import {usersAPI} from '../api/usersAPI'
 
 export const followUserById = createAsyncThunk(
 	'users/followUserById',

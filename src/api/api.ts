@@ -8,28 +8,7 @@ export const axiosInstance = axios.create({
 	}
 })
 
-export const usersAPI = {
-	getUsers: async (currentPage: number, pageSize: number) => {
-		const res = await axiosInstance.get(`users?page=${currentPage}&count=${pageSize}`)
-		return res.data
-	},
-	follow: async (userId: number) => {
-		const res = await axiosInstance.post(`follow/${userId}`)
-		return res.data
-	},
-	unfollow: async (userId: number) => {
-		const res = await axiosInstance.delete(`follow/${userId}`)
-		return res.data
-	}
-}
 
-export const getUserProfile = async (userId: string) => {
-	const res = await axiosInstance.get(`profile/${userId}`)
-	return res.data
-}
 
-export const checkAuth = async () => {
-	const res = await axiosInstance.get(`auth/me`)
-	return res.data
-}
+
 

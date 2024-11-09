@@ -1,20 +1,20 @@
 import styles from './Profile.module.css'
 import MyPosts from './MyPosts/MyPosts'
 import ProfileInfo from './ProfileInfo/ProfileInfo'
-import React, {useEffect, useState} from 'react'
-import {setUserProfile} from '../../Redux/profileSlice'
+import React, {useEffect} from 'react'
+import {getUserProfileThunk, selectProfile} from '../../Redux/profileSlice'
 import {useDispatch, useSelector} from 'react-redux'
 import {useParams, useNavigate} from 'react-router-dom'
-import {ProfileType} from '../../types'
 import {Spin} from 'antd'
-import {getUserProfile} from '../../api/api'
 import {selectUserId} from '../../Redux/authSlice'
+import {AppDispatch} from '../../Redux/store'
 
 const Profile: React.FC = () => {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch<AppDispatch>()
 	const navigate = useNavigate()
 	const {userId} = useParams<{ userId: string }>()
-	const [profile, setProfile] = useState<ProfileType | null>(null)
+
+	const profile = useSelector(selectProfile)
 
 	const currentUserId = useSelector(selectUserId)
 	useEffect(() => {
@@ -22,12 +22,7 @@ const Profile: React.FC = () => {
 			navigate(`/sn/profile/${currentUserId}`, {replace: true})
 		}
 		else {
-			getUserProfile(userId)
-				.then((response) => {
-					setProfile(response)
-					dispatch(setUserProfile(response))
-				})
-				.catch((error) => console.error('Ошибка при загрузке профиля:', error))
+			dispatch(getUserProfileThunk(userId))
 		}
 	}, [dispatch, userId, navigate])
 

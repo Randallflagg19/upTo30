@@ -1,6 +1,7 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {PostType} from './../types'
 import {RootState} from './store'
+import {profileAPI} from '../api/profileAPI'
 
 type ProfilePageState = {
 	posts: PostType[];
@@ -20,9 +21,24 @@ const initialState: ProfilePageState = {
 	profile: null
 }
 
+export const getUserProfileThunk = createAsyncThunk<any, string, { state: RootState }>(
+	'profile/getUserProfile',
+	async (userId: string, {dispatch}) => {
+		const data = await profileAPI.getUserProfile(userId)
+		dispatch(setUserProfile(data))
+		return data
+	}
+)
+
 const profileSlice = createSlice({
 	name: 'profile',
 	initialState,
+	extraReducers: (builder) => {
+		builder
+			.addCase(getUserProfileThunk.fulfilled, (state, action) => {
+				state.profile = action.payload
+			})
+	},
 	reducers: {
 		changeNewPostText(state, action: PayloadAction<string>) {
 			state.newPostText = action.payload
