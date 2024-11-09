@@ -4,16 +4,16 @@ import ProfileInfo from './ProfileInfo/ProfileInfo'
 import React, {useEffect} from 'react'
 import {getUserProfileThunk, selectProfile} from '../../Redux/profileSlice'
 import {useDispatch, useSelector} from 'react-redux'
-import {useParams, useNavigate} from 'react-router-dom'
+import {useParams, useNavigate, Navigate} from 'react-router-dom'
 import {Spin} from 'antd'
-import {selectUserId} from '../../Redux/authSlice'
+import {selectIsAuth, selectUserId} from '../../Redux/authSlice'
 import {AppDispatch} from '../../Redux/store'
 
 const Profile: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>()
 	const navigate = useNavigate()
 	const {userId} = useParams<{ userId: string }>()
-
+	const isAuth = useSelector(selectIsAuth)
 	const profile = useSelector(selectProfile)
 
 	const currentUserId = useSelector(selectUserId)
@@ -25,13 +25,16 @@ const Profile: React.FC = () => {
 			dispatch(getUserProfileThunk(userId))
 		}
 	}, [dispatch, userId, navigate])
-
-	return (
-		<div className={styles.content}>
-			{profile ? <ProfileInfo profile={profile}/> : <Spin/>}
-			<MyPosts/>
-		</div>
-	)
+	if (!isAuth) {
+		return <Navigate to="/sn/login"/>
+	}
+	else
+		return (
+			<div className={styles.content}>
+				{profile ? <ProfileInfo profile={profile}/> : <Spin/>}
+				<MyPosts/>
+			</div>
+		)
 }
 
 export default Profile

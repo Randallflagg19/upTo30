@@ -2,6 +2,7 @@ import Profile from '../components/Profile/Profile'
 import Dialogs from '../components/Dialogs/Dialogs'
 import Users from '../components/Users/Users'
 import React from 'react'
+import Login from '../components/Login/Login'
 
 export const routesSocialNetwork = [
 	{path: 'profile/:userId?', component: <Profile/>, label: 'Моя страница'},
@@ -9,5 +10,6 @@ export const routesSocialNetwork = [
 	{path: 'news', component: <div>News</div>, label: 'News'},
 	{path: 'music', component: <div>Music</div>, label: 'Music'},
 	{path: 'settings', component: <div>Settings</div>, label: 'Settings'},
-	{path: 'users', component: <Users/>, label: 'Users'}
+	{path: 'users', component: <Users/>, label: 'Users'},
+	{path: 'login', component: <Login/>, label: 'Login'}
 ]

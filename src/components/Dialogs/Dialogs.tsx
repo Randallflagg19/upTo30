@@ -10,6 +10,8 @@ import {
 	selectMessages,
 	selectNewMessageText
 } from '../../Redux/messageSlice'
+import {selectIsAuth} from '../../Redux/authSlice'
+import {Navigate} from 'react-router-dom'
 
 type DialogsProps = {}
 
@@ -22,6 +24,7 @@ const Dialogs: React.FC<DialogsProps> = () => {
 	const updateNewMessageText = (text: string) => dispatch(changeNewMessageText(text))
 
 	const dialogs = useSelector(selectDialogs)
+	const isAuth = useSelector(selectIsAuth)
 
 	const newMessageElement = useRef<HTMLTextAreaElement>(null)
 
@@ -37,20 +40,24 @@ const Dialogs: React.FC<DialogsProps> = () => {
 			updateNewMessageText(newMessageElement.current.value)
 		}
 	}
-
-	return (
-		<div className={styles.dialogs}>
-			<div className={styles.dialogsItems}>
-				{dialogsElements}
-			</div>
-			<div className={styles.messages}>
-				{messagesElements}
-				<textarea onChange={onMessageChange} ref={newMessageElement} value={newMessageText}/>
-				<button onClick={() => sendMessage()}>Add message</button>
-			</div>
-		</div>
-
-	)
+	{
+		if (!isAuth) {
+			return <Navigate to="/sn/login"/>
+		}
+		else
+			return (
+				<div className={styles.dialogs}>
+					<div className={styles.dialogsItems}>
+						{dialogsElements}
+					</div>
+					<div className={styles.messages}>
+						{messagesElements}
+						<textarea onChange={onMessageChange} ref={newMessageElement} value={newMessageText}/>
+						<button onClick={() => sendMessage()}>Add message</button>
+					</div>
+				</div>
+			)
+	}
 }
 
 export default Dialogs

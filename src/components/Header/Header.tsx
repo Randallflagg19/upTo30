@@ -56,7 +56,7 @@ export default function Header() {
 						</Avatar>
 					) : (
 						<button className={styles.loginButton}>
-							<NavLink style={{color: 'white'}} to="/login">
+							<NavLink style={{color: 'white'}} to="/sn/login">
 								Login
 							</NavLink>
 						</button>
