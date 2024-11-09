@@ -2,27 +2,39 @@ import React, {useEffect, useState} from 'react'
 import styles from './Header.module.css'
 import {NavLink} from 'react-router-dom'
 import {Menu, Avatar} from 'antd'
-import axios from 'axios'
-import {setUserProfile} from '../../Redux/profileSlice'
 import {useDispatch, useSelector} from 'react-redux'
 import {setAuthUserData, selectIsAuth, selectLogin} from '../../Redux/authSlice'
+import {checkAuth} from '../../api/api'
 
 export default function Header() {
 	const [selectedKey, setSelectedKey] = useState('1')
 	const isAuth = useSelector(selectIsAuth)
-	const loginFirstLetter = useSelector(selectLogin)
+	const currentUserLogin = useSelector(selectLogin)
 	const dispatch = useDispatch()
+
 	useEffect(() => {
-		axios.get(`https://social-network.samuraijs.com/api/1.0/auth/me`,
-			{withCredentials: true})
+		checkAuth()
 			.then((response) => {
-				console.log(response.data)
-				if (response.data.resultCode === 0)
-					dispatch(setAuthUserData(response.data))
-
+				if (response.resultCode === 0) {
+					dispatch(setAuthUserData(response))
+				}
 			})
-
 	}, [])
+
+	const menuItems = [
+		{
+			label: <NavLink to="/sn/profile">Social Network</NavLink>,
+			key: '1'
+		},
+		{
+			label: <NavLink to="/translator">Translator</NavLink>,
+			key: '2'
+		},
+		{
+			label: <NavLink to="/home">Home</NavLink>,
+			key: '3'
+		}
+	]
 
 	return (
 		<header className={styles.header}>
@@ -37,24 +49,15 @@ export default function Header() {
 					mode="horizontal"
 					selectedKeys={[selectedKey]}
 					onClick={(e) => setSelectedKey(e.key)}
+					items={menuItems} // Заменяем children на items
 					className={styles.menu}
-				>
-					<Menu.Item key="1">
-						<NavLink to="/sn/profile">Social Network</NavLink>
-					</Menu.Item>
-					<Menu.Item key="2">
-						<NavLink to="/translator">Translator</NavLink>
-					</Menu.Item>
-					<Menu.Item key="3">
-						<NavLink to="/home">Home</NavLink>
-					</Menu.Item>
-				</Menu>
+				/>
 			</div>
 			{selectedKey === '1' && (
 				<div className={styles.loginBlock}>
 					{isAuth ? (
 						<Avatar style={{backgroundColor: 'green', verticalAlign: 'middle'}}>
-							{loginFirstLetter}
+							{currentUserLogin}
 						</Avatar>
 					) : (
 						<button className={styles.loginButton}>

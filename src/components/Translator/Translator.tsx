@@ -1,8 +1,9 @@
 import React, {useState} from 'react'
 import {Route, Routes} from 'react-router-dom'
-import Login from './TrComponents/Login/Login'
+import Login from './translatorComponents/Login/Login'
 import './Translator.css'
-import Main from './TrComponents/Main/Main'
+import Main from './translatorComponents/Main/Main'
+import {routesTranslator} from '../../routes/routesTranslator'
 
 export const UserContext = React.createContext<{
 		isLoggedIn: boolean;
@@ -28,9 +29,8 @@ function Translator() {
 		<UserContext.Provider value={{isLoggedIn, setIsLoggedIn, isGuest, setIsGuest}}>
 			<AuthMessageContext.Provider value={{authMessage, setAuthMessage}}>
 				<Routes>
-					<Route path="/" element={<Login/>}/>
-					<Route path="main" element={<Main/>}/>
-					<Route path="*" element={<h1>страничка не найдена</h1>}/>
+					{routesTranslator.map((route) => (
+						<Route key={route.path} path={route.path} element={route.component}/>))}
 				</Routes>
 			</AuthMessageContext.Provider>
 		</UserContext.Provider>

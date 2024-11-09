@@ -61,7 +61,10 @@ export type UsersPageState = {
 	pageSize: number,
 	totalUsersCount: number,
 	currentPage: number,
-	isFetching: boolean
+	isFetching: boolean,
+	followingInProgress: number[]
+	status: null | string,
+	error: null | string,
 }
 
 export type ProfileType = {

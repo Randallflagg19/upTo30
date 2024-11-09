@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {
-	follow,
-	unfollow,
 	updateStatus,
 	selectUsers,
 	setUsers,
@@ -11,31 +9,27 @@ import {
 	selectCurrentPage,
 	selectPageSize,
 	setCurrentPage,
-	toggleIsFetching, selectIsFetching
+	toggleIsFetching,
+	selectIsFetching,
+	selectFollowingInProgress, unfollowUserById, followUserById, getUsersThunk
 } from '../../Redux/usersSlice'
 import {UserType} from '../../types'
 import {Card, Button, List, Avatar, Input, Spin} from 'antd'
-import axios from 'axios'
 import defaultAvatar from '../../assets/defaultAvatar.png'
 import Paginator from '../common/Paginator/Paginator'
 import {NavLink} from 'react-router-dom'
+import {usersAPI} from '../../api/api'
+import {AppDispatch} from '../../Redux/store'
+import styles from './Users.module.css'
 
 const Users = () => {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch<AppDispatch>()
 	const users = useSelector(selectUsers)
 	const isFetching = useSelector(selectIsFetching)
 	const [inputValues, setInputValues] = useState<{ [key: number]: string }>({})
 	const totalUsersCount = useSelector(selectTotalCount)
 	const currentPage = useSelector(selectCurrentPage)
 	const pageSize = useSelector(selectPageSize)
-
-	const handleFollow = (userId: number) => {
-		dispatch(follow(userId))
-	}
-
-	const handleUnfollow = (userId: number) => {
-		dispatch(unfollow(userId))
-	}
 
 	const handleStatusChange = (userId: number) => {
 		dispatch(updateStatus({userId, status: inputValues[userId] || null}))
@@ -48,15 +42,9 @@ const Users = () => {
 	}
 
 	useEffect(() => {
-		dispatch(toggleIsFetching(true))
-		axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${currentPage}&count=${pageSize}`)
-			.then((response) => {
-				dispatch(setUsers({users: response.data.items}))
-				dispatch(setTotalUsersCount(response.data.totalCount))
-			})
-			.finally(() => dispatch(toggleIsFetching(false))) // Stop fetching in finally block
+		dispatch(getUsersThunk({currentPage, pageSize}))
 	}, [dispatch, currentPage, pageSize])
-
+	let followingInProgress = useSelector(selectFollowingInProgress)
 	return (
 		<>
 			<Paginator
@@ -74,20 +62,23 @@ const Users = () => {
 				<List
 					dataSource={users}
 					renderItem={(user: UserType) => (
-						<List.Item style={{display: 'flex', justifyContent: 'center'}}>
+						<List.Item className={styles.listItem}>
 							<Card
 								title={<strong>{user.name}</strong>}
 								extra={user.followed ? (
-									<Button type="primary" danger onClick={() => handleUnfollow(user.id)}>
+									<Button type="primary" danger
+									        disabled={followingInProgress.includes(user.id)}
+									        onClick={() => dispatch(unfollowUserById(user.id))}>
 										Отписаться
 									</Button>
 								) : (
-									<Button type="primary" onClick={() => handleFollow(user.id)}>
+									<Button type="primary"
+									        disabled={followingInProgress.includes(user.id)}
+									        onClick={() => dispatch(followUserById(user.id))}>
 										Подписаться
 									</Button>
 								)}
-								style={{width: 300}}
-							>
+								className={styles.card}>
 								<NavLink to={`/sn/profile/${user.id}`}>
 									<Avatar
 										size={64}
@@ -110,7 +101,6 @@ const Users = () => {
 					)}
 				/>
 			}
-
 		</>
 	)
 }
