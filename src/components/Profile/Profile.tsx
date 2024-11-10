@@ -9,6 +9,7 @@ import {Spin} from 'antd'
 import {selectUserId} from '../../Redux/authSlice'
 import {AppDispatch} from '../../Redux/store'
 import WithAuthRedirect from '../../hoc/WithAuthRedirect'
+import {compose} from '@reduxjs/toolkit'
 
 const Profile: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>()
@@ -34,6 +35,5 @@ const Profile: React.FC = () => {
 	)
 }
 
-const AuthRedirectComponent = WithAuthRedirect(Profile)
-
+const AuthRedirectComponent = compose(WithAuthRedirect)(Profile)
 export default AuthRedirectComponent

@@ -13,6 +13,7 @@ type AuthState = {
 	resultCode: number | null
 	messages: string[] | null
 	data: UserAuthInfo
+	isAuthChecked: boolean
 }
 
 const initialState: AuthState = {
@@ -23,7 +24,8 @@ const initialState: AuthState = {
 		email: null,
 		login: null,
 		isAuth: false
-	}
+	},
+	isAuthChecked: false
 }
 
 export const checkAuthThunk = createAsyncThunk(
@@ -33,6 +35,7 @@ export const checkAuthThunk = createAsyncThunk(
 		if (response.resultCode === 0) {
 			dispatch(setAuthUserData(response))
 		}
+		dispatch(setAuthChecked(true))
 	}
 )
 
@@ -42,6 +45,9 @@ const authSlice = createSlice({
 	reducers: {
 		setAuthUserData(state, action: PayloadAction<AuthState>) {
 			state.data = {...action.payload.data, isAuth: true}
+		},
+		setAuthChecked(state, action: PayloadAction<boolean>) {
+			state.isAuthChecked = action.payload
 		}
 	}
 })
@@ -49,5 +55,6 @@ const authSlice = createSlice({
 export const selectIsAuth = (state: RootState) => state.auth.data.isAuth
 export const selectLogin = (state: RootState) => state.auth.data.login
 export const selectUserId = (state: RootState) => state.auth.data.id
-export const {setAuthUserData} = authSlice.actions
+export const selectIsAuthChecked = (state: RootState) => state.auth.isAuthChecked
+export const {setAuthUserData, setAuthChecked} = authSlice.actions
 export const authReducer = authSlice.reducer

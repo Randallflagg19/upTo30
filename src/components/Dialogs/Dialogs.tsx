@@ -11,6 +11,7 @@ import {
 	selectNewMessageText
 } from '../../Redux/messageSlice'
 import WithAuthRedirect from '../../hoc/WithAuthRedirect'
+import {compose} from '@reduxjs/toolkit'
 
 type DialogsProps = {}
 
@@ -53,6 +54,7 @@ const Dialogs: React.FC<DialogsProps> = () => {
 		)
 	}
 }
-const AuthRedirectComponent = WithAuthRedirect(Dialogs)
+
+const AuthRedirectComponent = compose(WithAuthRedirect)(Dialogs)
 
 export default AuthRedirectComponent

@@ -6,20 +6,15 @@ import {Route, Routes} from 'react-router-dom'
 import Translator from './components/Translator/Translator'
 import Home from './components/Home/Home'
 import {useDispatch} from 'react-redux'
-import {setAuthUserData} from './Redux/authSlice'
-import {authAPI} from './api/authAPI'
+import {checkAuthThunk} from './Redux/authSlice'
 import SocialNetwork from './components/SocialNetwork/SocialNetwork'
+import {AppDispatch} from './Redux/store'
 
 const App: React.FC = () => {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch<AppDispatch>()
 
 	useEffect(() => {
-		authAPI.checkAuth()
-			.then(response => {
-				if (response.resultCode === 0) {
-					dispatch(setAuthUserData(response))
-				}
-			})
+		dispatch(checkAuthThunk())
 	}, [dispatch])
 
 	return (

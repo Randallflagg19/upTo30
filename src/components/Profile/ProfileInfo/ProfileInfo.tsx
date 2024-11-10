@@ -3,6 +3,7 @@ import {Descriptions} from 'antd'
 import styles from './ProfileInfo.module.css'
 import defaultAvatar from '../../../assets/defaultAvatar.png'
 import {ProfileType} from '../../../types'
+import ProfileStatus from '../ProfileStatus'
 
 type ProfileInfoProps = {
 	profile: ProfileType;
@@ -18,6 +19,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({profile}) => {
 					alt="Profile"
 				/>
 			</div>
+			<ProfileStatus/>
 			<Descriptions bordered title="" layout="horizontal" column={1}>
 				<Descriptions.Item label="Full Name">{profile.fullName}</Descriptions.Item>
 				<Descriptions.Item label="Looking for a job">
