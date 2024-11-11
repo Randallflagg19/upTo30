@@ -7,9 +7,10 @@ import ProfileStatus from '../ProfileStatus'
 
 type ProfileInfoProps = {
 	profile: ProfileType;
+	userId: string;
 };
 
-const ProfileInfo: React.FC<ProfileInfoProps> = ({profile}) => {
+const ProfileInfo: React.FC<ProfileInfoProps> = ({profile, userId}) => {
 	return (
 		<div className={styles.profileContainer}>
 			<div>
@@ -19,7 +20,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({profile}) => {
 					alt="Profile"
 				/>
 			</div>
-			<ProfileStatus/>
+			<ProfileStatus userId={userId}/>
 			<Descriptions bordered title="" layout="horizontal" column={1}>
 				<Descriptions.Item label="Full Name">{profile.fullName}</Descriptions.Item>
 				<Descriptions.Item label="Looking for a job">

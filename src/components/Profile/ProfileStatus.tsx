@@ -1,11 +1,30 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Typography, Input} from 'antd'
+import {useSelector, useDispatch} from 'react-redux'
+import {selectStatus, getStatusThunk, updateStatusThunk} from '../../Redux/profileSlice'
+import {AppDispatch} from '../../Redux/store'
 
 const {Text} = Typography
 
-const ProfileStatus: React.FC = () => {
-	const [status, setStatus] = useState('Your status')
+interface ProfileStatusProps {
+	userId: string | null
+}
+
+const ProfileStatus: React.FC<ProfileStatusProps> = ({userId}) => {
+	const dispatch = useDispatch<AppDispatch>()
+	const userStatus = useSelector(selectStatus)
+	const [status, setStatus] = useState(userStatus || 'No status yet')
 	const [editMode, setEditMode] = useState(false)
+
+	useEffect(() => {
+		if (userId) {
+			dispatch(getStatusThunk(userId))
+		}
+	}, [dispatch, userId])
+
+	useEffect(() => {
+		setStatus(userStatus || 'No status yet')
+	}, [userStatus])
 
 	const onStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setStatus(e.target.value)
@@ -17,6 +36,9 @@ const ProfileStatus: React.FC = () => {
 
 	const deactivateEditMode = () => {
 		setEditMode(false)
+		if (status !== userStatus) {
+			dispatch(updateStatusThunk(status))
+		}
 	}
 
 	return (
@@ -24,12 +46,10 @@ const ProfileStatus: React.FC = () => {
 			{!editMode ? (
 				<Text
 					style={{cursor: 'pointer', fontSize: '16px', color: '#555'}}
-					editable={{
-						onStart: activateEditMode
-					}}
+					editable={{onStart: activateEditMode}}
 					onDoubleClick={activateEditMode}
 				>
-					{status || 'No status yet'}
+					{status}
 				</Text>
 			) : (
 				<Input
