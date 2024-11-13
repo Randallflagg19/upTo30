@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React from 'react'
 import styles from './Dialogs.module.css'
 import DialogItem from './DialogItem/DialogItem'
 import Message from './Message/Message'
@@ -6,12 +6,11 @@ import {useDispatch, useSelector} from 'react-redux'
 import {selectDialogs} from '../../Redux/dialogsSlice'
 import {
 	addMessage,
-	changeNewMessageText,
-	selectMessages,
-	selectNewMessageText
+	selectMessages
 } from '../../Redux/messageSlice'
 import WithAuthRedirect from '../../hoc/WithAuthRedirect'
 import {compose} from '@reduxjs/toolkit'
+import {Field, Form, Formik} from 'formik'
 
 type DialogsProps = {}
 
@@ -19,13 +18,8 @@ const Dialogs: React.FC<DialogsProps> = () => {
 
 	const dispatch = useDispatch()
 	const messages = useSelector(selectMessages)
-	const newMessageText = useSelector(selectNewMessageText)
-	const sendMessage = () => dispatch(addMessage())
-	const updateNewMessageText = (text: string) => dispatch(changeNewMessageText(text))
 
 	const dialogs = useSelector(selectDialogs)
-
-	const newMessageElement = useRef<HTMLTextAreaElement>(null)
 
 	const dialogsElements = dialogs.map(
 		dialog => <DialogItem key={dialog.id} name={dialog.name} id={dialog.id}/>
@@ -34,10 +28,8 @@ const Dialogs: React.FC<DialogsProps> = () => {
 		message => <Message key={message.id} message={message.message} id={message.id}/>
 	)
 
-	const onMessageChange = () => {
-		if (newMessageElement.current) {
-			updateNewMessageText(newMessageElement.current.value)
-		}
+	const addNewMessage = (message: string) => {
+		dispatch(addMessage(message))
 	}
 	{
 		return (
@@ -47,12 +39,38 @@ const Dialogs: React.FC<DialogsProps> = () => {
 				</div>
 				<div className={styles.messages}>
 					{messagesElements}
-					<textarea onChange={onMessageChange} ref={newMessageElement} value={newMessageText}/>
-					<button onClick={() => sendMessage()}>Add message</button>
+					<AddMessageForm onSubmit={addNewMessage}/>
 				</div>
 			</div>
 		)
 	}
+}
+
+interface AddMessageFormProps {
+	onSubmit: (message: string) => void
+}
+
+const AddMessageForm: React.FC<AddMessageFormProps> = ({onSubmit}) => {
+	return (
+		<Formik
+			initialValues={{newMessageBody: ''}}
+			onSubmit={(values, {resetForm}) => {
+				onSubmit(values.newMessageBody)
+				resetForm()
+			}}
+		>
+			{({handleSubmit}) => (
+				<Form onSubmit={handleSubmit}>
+					<Field
+						component="textarea"
+						name="newMessageBody"
+						placeholder="Enter your message"
+					/>
+					<button type="submit">Add message</button>
+				</Form>
+			)}
+		</Formik>
+	)
 }
 
 const AuthRedirectComponent = compose(WithAuthRedirect)(Dialogs)

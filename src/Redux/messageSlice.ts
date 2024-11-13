@@ -4,7 +4,6 @@ import {RootState} from './store'
 
 type MessagePageState = {
 	messages: MessageType[];
-	newMessageText: string;
 }
 
 const initialState: MessagePageState = {
@@ -14,30 +13,24 @@ const initialState: MessagePageState = {
 		{id: 3, message: 'message3'},
 		{id: 4, message: 'message4'},
 		{id: 5, message: 'message5'}
-	],
-	newMessageText: ''
+	]
 }
 
 const messageSlice = createSlice({
 	name: 'message',
 	initialState,
 	reducers: {
-		changeNewMessageText(state, action: PayloadAction<string>) {
-			state.newMessageText = action.payload
-		},
-		addMessage(state) {
+		addMessage(state, action: PayloadAction<string>) {
 			const newMessage: MessageType = {
 				id: state.messages.length + 1,
-				message: state.newMessageText
+				message: action.payload
 			}
 			state.messages = [...state.messages, newMessage]
-			state.newMessageText = ''
 		}
 	}
 })
 
 export const selectMessages = (state: RootState) => state.messagePage.messages
-export const selectNewMessageText = (state: RootState) => state.messagePage.newMessageText
 
-export const {changeNewMessageText, addMessage} = messageSlice.actions
+export const {addMessage} = messageSlice.actions
 export const messageReducer = messageSlice.reducer

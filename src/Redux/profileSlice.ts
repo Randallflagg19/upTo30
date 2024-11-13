@@ -65,13 +65,10 @@ const profileSlice = createSlice({
 			})
 	},
 	reducers: {
-		changeNewPostText(state, action: PayloadAction<string>) {
-			state.newPostText = action.payload
-		},
-		addPost(state) {
+		addPost(state, action: PayloadAction<string>) {
 			const newPost: PostType = {
 				id: state.posts.length + 1,
-				message: state.newPostText,
+				message: action.payload,
 				likesCount: '0'
 			}
 			state.posts = [...state.posts, newPost]
@@ -88,7 +85,6 @@ const profileSlice = createSlice({
 
 export const selectStatus = (state: RootState) => state.profilePage.status
 export const selectPosts = (state: RootState) => state.profilePage.posts
-export const selectNewPostText = (state: RootState) => state.profilePage.newPostText
-export const {changeNewPostText, addPost, setUserProfile, setStatus} = profileSlice.actions
+export const {addPost, setUserProfile, setStatus} = profileSlice.actions
 export const profileReducer = profileSlice.reducer
 export const selectProfile = (state: RootState) => state.profilePage.profile
