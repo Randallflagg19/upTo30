@@ -52,16 +52,17 @@ const PostsForm: React.FC<PostsFormType> = ({onSubmit}) => {
 				resetForm()
 			}}
 		>
-			{({handleSubmit}) => (
+			{({handleSubmit, errors, touched}) => (
 				<Form onSubmit={handleSubmit}>
 					<div>
 						<Field
 							as={TextArea}
 							name="postText"
+							className={errors.postText && touched.postText ? styles.errorBorder : ''}
 							style={{width: '300px', height: 'auto'}}
 							autoSize={{minRows: 3, maxRows: 8}}
 							placeholder="Enter your post"
-							validate={composeValidators(required, maxLength(15), minLength(2))}
+							validate={composeValidators(required, maxLength(50), minLength(2))}
 						/>
 						<div style={{color: 'red'}}>
 							<ErrorMessage name="postText" component="div"/>

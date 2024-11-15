@@ -7,6 +7,8 @@ export const maxLength = (max: number) => (value: any) =>
 export const minLength = (min: number) => (value: any) =>
 	value && value.length < min ? `Min length is ${min}` : undefined
 
-export const composeValidators = (...validators: Array<(value: any) => string | undefined>) =>
-	(value: any) => validators.reduce<string | undefined>((error, validator) => error || validator(value), undefined)
+export const composeValidators = (...validators: Array<(value: any) =>
+	string | undefined>) =>
+	(value: any) => validators.reduce<string | undefined>((error, validator) =>
+		error || validator(value), undefined)
 

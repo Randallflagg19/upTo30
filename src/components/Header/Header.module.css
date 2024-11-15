@@ -25,7 +25,7 @@
 }
 
 .menuContainer {
-    flex-grow: 1; /* Позволит контейнеру меню занимать доступное пространство */
+    flex-grow: 1;
 }
 
 .loginBlock {
@@ -39,9 +39,17 @@
     border: none;
     background-color: dodgerblue;
     border-radius: 999px;
-    /*padding: 8px;*/
     margin-left: 12px;
     text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 8px 15px;
+}
+
+.logoutButton {
+    border: none;
+    background-color: slateblue;
+    border-radius: 999px;
+    margin-right: 12px;
     letter-spacing: 0.6px;
     padding: 8px 15px;
 }

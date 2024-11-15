@@ -3,8 +3,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {
 	updateStatus,
 	selectUsers,
-	setUsers,
-	setTotalUsersCount,
 	selectTotalCount,
 	selectCurrentPage,
 	selectPageSize,
@@ -17,7 +15,7 @@ import {UserType} from '../../types'
 import {Card, Button, List, Avatar, Input, Spin} from 'antd'
 import defaultAvatar from '../../assets/defaultAvatar.png'
 import Paginator from '../common/Paginator/Paginator'
-import {NavLink} from 'react-router-dom'
+import {NavLink, useSearchParams} from 'react-router-dom'
 import {AppDispatch} from '../../Redux/store'
 import styles from './Users.module.css'
 
@@ -29,6 +27,7 @@ const Users = () => {
 	const totalUsersCount = useSelector(selectTotalCount)
 	const currentPage = useSelector(selectCurrentPage)
 	const pageSize = useSelector(selectPageSize)
+	const [searchParams, setSearchParams] = useSearchParams()
 
 	const handleStatusChange = (userId: number) => {
 		dispatch(updateStatus({userId, status: inputValues[userId] || null}))
@@ -36,14 +35,19 @@ const Users = () => {
 	}
 
 	const handlePageChange = (pageNumber: number) => {
+		setSearchParams({page: String(pageNumber)})
 		dispatch(setCurrentPage(pageNumber))
 		dispatch(toggleIsFetching(true))
 	}
 
 	useEffect(() => {
-		dispatch(getUsersThunk({currentPage, pageSize}))
-	}, [dispatch, currentPage, pageSize])
+		const pageFromUrl = Number(searchParams.get('page')) || 1
+		dispatch(setCurrentPage(pageFromUrl))
+		dispatch(getUsersThunk({currentPage: pageFromUrl, pageSize}))
+	}, [dispatch, searchParams, pageSize])
+
 	let followingInProgress = useSelector(selectFollowingInProgress)
+
 	return (
 		<>
 			<Paginator
@@ -54,10 +58,10 @@ const Users = () => {
 				portionSize={10}
 			/>
 			{isFetching ? (
-					<div className="preloader-overlay">
-						<Spin size="large"/>
-					</div>
-				) :
+				<div className="preloader-overlay">
+					<Spin size="large"/>
+				</div>
+			) : (
 				<List
 					dataSource={users}
 					renderItem={(user: UserType) => (
@@ -86,7 +90,7 @@ const Users = () => {
 									/>
 								</NavLink>
 								<div style={{marginTop: '10px'}}>
-									<span> {user.status || 'Нет статуса'}</span>
+									<span>{user.status || 'Нет статуса'}</span>
 								</div>
 								<Input
 									placeholder="Обновить статус"
@@ -99,7 +103,7 @@ const Users = () => {
 						</List.Item>
 					)}
 				/>
-			}
+			)}
 		</>
 	)
 }

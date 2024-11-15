@@ -3,6 +3,16 @@ import {RootState} from './store'
 import {UsersPageState, UserType} from '../types'
 import {usersAPI} from '../api/usersAPI'
 
+export const getUsersThunk = createAsyncThunk(
+	'users/getUsers',
+	async ({currentPage, pageSize}: { currentPage: number; pageSize: number }, {dispatch}) => {
+		dispatch(toggleIsFetching(true))
+		const data = await usersAPI.getUsers(currentPage, pageSize)
+		dispatch(toggleIsFetching(false))
+		return {users: data.items, totalCount: data.totalCount}
+	}
+)
+
 export const followUserById = createAsyncThunk(
 	'users/followUserById',
 	async (userId: number, {rejectWithValue}) => {
@@ -18,16 +28,6 @@ export const followUserById = createAsyncThunk(
 		catch (error) {
 			return rejectWithValue((error as Error).message)
 		}
-	}
-)
-
-export const getUsersThunk = createAsyncThunk(
-	'users/getUsers',
-	async ({currentPage, pageSize}: { currentPage: number; pageSize: number }, {dispatch}) => {
-		dispatch(toggleIsFetching(true))
-		const data = await usersAPI.getUsers(currentPage, pageSize)
-		dispatch(toggleIsFetching(false))
-		return {users: data.items, totalCount: data.totalCount}
 	}
 )
 

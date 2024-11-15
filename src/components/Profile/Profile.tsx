@@ -6,7 +6,6 @@ import {getUserProfileThunk, selectProfile} from '../../Redux/profileSlice'
 import {selectUserId} from '../../Redux/authSlice'
 import {AppDispatch} from '../../Redux/store'
 import WithAuthRedirect from '../../hoc/WithAuthRedirect'
-import {compose} from '@reduxjs/toolkit'
 import MyPosts from './MyPosts/MyPosts'
 import ProfileInfo from './ProfileInfo/ProfileInfo'
 import styles from './Profile.module.css'
@@ -16,21 +15,21 @@ const Profile: React.FC = () => {
 	const navigate = useNavigate()
 	const profile = useSelector(selectProfile)
 	const {userId} = useParams<{ userId: string }>()
-	const currentUserId = useSelector(selectUserId)
+	const authedUserId = useSelector(selectUserId)
 
 	useEffect(() => {
-		if (!userId && currentUserId) {
-			navigate(`/sn/profile/${currentUserId}`, {replace: true})
+		if (!userId && authedUserId) {
+			navigate(`/sn/profile/${authedUserId}`, {replace: true})
 		}
 		else if (userId) {
 			dispatch(getUserProfileThunk(userId))
 		}
-	}, [dispatch, userId, currentUserId, navigate])
+	}, [dispatch, userId, authedUserId, navigate])
 
 	return (
 		<div className={styles.content}>
 			{profile ? (
-				<ProfileInfo profile={profile} userId={(userId || currentUserId) as string}/>
+				<ProfileInfo profile={profile} userId={(userId || authedUserId) as string}/>
 			) : (
 				<Spin/>
 			)}
@@ -38,6 +37,6 @@ const Profile: React.FC = () => {
 		</div>
 	)
 }
-
-const AuthRedirectComponent = compose(WithAuthRedirect)(Profile)
+const AuthRedirectComponent = WithAuthRedirect(Profile)
 export default AuthRedirectComponent
+

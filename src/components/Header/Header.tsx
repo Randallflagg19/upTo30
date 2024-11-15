@@ -3,7 +3,12 @@ import styles from './Header.module.css'
 import {NavLink} from 'react-router-dom'
 import {Menu, Avatar} from 'antd'
 import {useDispatch, useSelector} from 'react-redux'
-import {selectIsAuth, selectLogin, checkAuthThunk} from '../../Redux/authSlice'
+import {
+	selectIsAuth,
+	selectLogin,
+	checkAuthThunk,
+	logoutThunk
+} from '../../Redux/authSlice'
 import {AppDispatch} from '../../Redux/store'
 
 export default function Header() {
@@ -15,6 +20,10 @@ export default function Header() {
 	useEffect(() => {
 		dispatch(checkAuthThunk())
 	}, [])
+
+	const handleLogout = () => {
+		dispatch(logoutThunk())
+	}
 
 	const menuItems = [
 		{
@@ -50,10 +59,17 @@ export default function Header() {
 			</div>
 			{selectedKey === '1' && (
 				<div className={styles.loginBlock}>
-					{isAuth ? (
-						<Avatar style={{backgroundColor: 'green', verticalAlign: 'middle'}}>
-							{currentUserLogin}
-						</Avatar>
+					{isAuth ? (<>
+							<button onClick={handleLogout} className={styles.logoutButton}>
+								<NavLink style={{color: 'white'}} to="/sn/login">
+									logout
+								</NavLink>
+							</button>
+							<Avatar style={{backgroundColor: 'green', verticalAlign: 'middle'}}>
+								{currentUserLogin}
+							</Avatar>
+						</>
+
 					) : (
 						<button className={styles.loginButton}>
 							<NavLink style={{color: 'white'}} to="/sn/login">

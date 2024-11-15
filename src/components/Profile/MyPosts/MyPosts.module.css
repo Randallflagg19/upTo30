@@ -1,6 +1,12 @@
-.postsBlock{
-  padding: 10px;
+.postsBlock {
+    padding: 10px;
 }
-.posts{
-  margin-top: 10px;
+
+.posts {
+    margin-top: 10px;
 }
+
+.errorBorder {
+    border: solid 1px red;
+}
+

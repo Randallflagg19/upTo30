@@ -10,15 +10,15 @@ import {
 } from '../../Redux/messageSlice'
 import WithAuthRedirect from '../../hoc/WithAuthRedirect'
 import {compose} from '@reduxjs/toolkit'
-import {Field, Form, Formik} from 'formik'
+import {ErrorMessage, Field, Form, Formik} from 'formik'
+import {composeValidators, maxLength, minLength, required} from '../../utils/validators/validators'
+import {Button, Input} from 'antd'
 
 type DialogsProps = {}
 
 const Dialogs: React.FC<DialogsProps> = () => {
-
 	const dispatch = useDispatch()
 	const messages = useSelector(selectMessages)
-
 	const dialogs = useSelector(selectDialogs)
 
 	const dialogsElements = dialogs.map(
@@ -31,19 +31,18 @@ const Dialogs: React.FC<DialogsProps> = () => {
 	const addNewMessage = (message: string) => {
 		dispatch(addMessage(message))
 	}
-	{
-		return (
-			<div className={styles.dialogs}>
-				<div className={styles.dialogsItems}>
-					{dialogsElements}
-				</div>
-				<div className={styles.messages}>
-					{messagesElements}
-					<AddMessageForm onSubmit={addNewMessage}/>
-				</div>
+
+	return (
+		<div className={styles.dialogs}>
+			<div className={styles.dialogsItems}>
+				{dialogsElements}
 			</div>
-		)
-	}
+			<div className={styles.messages}>
+				{messagesElements}
+				<AddMessageForm onSubmit={addNewMessage}/>
+			</div>
+		</div>
+	)
 }
 
 interface AddMessageFormProps {
@@ -59,14 +58,25 @@ const AddMessageForm: React.FC<AddMessageFormProps> = ({onSubmit}) => {
 				resetForm()
 			}}
 		>
-			{({handleSubmit}) => (
-				<Form onSubmit={handleSubmit}>
+			{({handleSubmit, errors, touched}) => (
+				<Form onSubmit={handleSubmit}
+				      style={{display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px'}}>
 					<Field
-						component="textarea"
+						as={Input.TextArea}
 						name="newMessageBody"
+						className={errors.newMessageBody && touched.newMessageBody ? styles.errorBorder : ''}
 						placeholder="Enter your message"
+						autoSize={{minRows: 3, maxRows: 15}}
+						validate={composeValidators(required, maxLength(50), minLength(2))}
+						status={errors.newMessageBody && touched.newMessageBody ? 'error' : ''}
 					/>
-					<button type="submit">Add message</button>
+					<ErrorMessage name="newMessageBody">
+						{msg => <div style={{color: 'red'}}>{msg}</div>}
+					</ErrorMessage>
+
+					<Button type="primary" htmlType="submit" style={{alignSelf: 'flex-start'}}>
+						Add message
+					</Button>
 				</Form>
 			)}
 		</Formik>
