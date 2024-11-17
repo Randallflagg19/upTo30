@@ -2,7 +2,7 @@ import React from 'react'
 import {useSelector} from 'react-redux'
 import {Navigate} from 'react-router-dom'
 import {Spin} from 'antd'
-import {selectIsAuth, selectIsAuthChecked} from '../Redux/authSlice'
+import {selectIsAuth, selectIsAuthChecked} from '../store/authSlice'
 
 const WithAuthRedirect = <P extends object>(Component: React.ComponentType<P>) => {
 	const RedirectComponent: React.FC<P> = (props) => {

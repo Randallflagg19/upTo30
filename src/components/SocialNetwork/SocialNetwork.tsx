@@ -7,7 +7,7 @@ import {routesSocialNetwork} from '../../routes/routesSocialNetwork'
 import {Content} from 'antd/es/layout/layout'
 
 const SocialNetwork = () => {
-	
+
 	return <Layout>
 		<Sider width={200} style={{background: '#fff'}}>
 			<SocialNetworkNavigation/>
@@ -17,6 +17,8 @@ const SocialNetwork = () => {
 				{routesSocialNetwork.map(route => (
 					<Route key={route.path} path={route.path} element={route.component}/>
 				))}
+
+
 			</Routes>
 		</Content>
 	</Layout>

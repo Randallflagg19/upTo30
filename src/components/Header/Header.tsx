@@ -8,18 +8,14 @@ import {
 	selectLogin,
 	checkAuthThunk,
 	logoutThunk
-} from '../../Redux/authSlice'
-import {AppDispatch} from '../../Redux/store'
+} from '../../store/authSlice'
+import {AppDispatch} from '../../store/store'
 
 export default function Header() {
 	const [selectedKey, setSelectedKey] = useState('1')
 	const isAuth = useSelector(selectIsAuth)
 	const currentUserLogin = useSelector(selectLogin)
 	const dispatch = useDispatch<AppDispatch>()
-
-	useEffect(() => {
-		dispatch(checkAuthThunk())
-	}, [])
 
 	const handleLogout = () => {
 		dispatch(logoutThunk())
@@ -61,9 +57,9 @@ export default function Header() {
 				<div className={styles.loginBlock}>
 					{isAuth ? (<>
 							<button onClick={handleLogout} className={styles.logoutButton}>
-								<NavLink style={{color: 'white'}} to="/sn/login">
-									logout
-								</NavLink>
+								{/*<NavLink style={{color: 'white'}} to="/sn/login">*/}
+								logout
+								{/*</NavLink>*/}
 							</button>
 							<Avatar style={{backgroundColor: 'green', verticalAlign: 'middle'}}>
 								{currentUserLogin}

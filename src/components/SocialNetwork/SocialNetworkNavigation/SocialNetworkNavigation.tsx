@@ -3,7 +3,7 @@ import {Menu} from 'antd'
 import {Link, useLocation} from 'react-router-dom'
 import {routesSocialNetwork} from '../../../routes/routesSocialNetwork'
 import {useSelector} from 'react-redux'
-import {selectUserId} from '../../../Redux/authSlice'
+import {selectUserId} from '../../../store/authSlice'
 
 const SocialNetworkNavigation = () => {
 	const userId = useSelector(selectUserId)

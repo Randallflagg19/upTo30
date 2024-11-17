@@ -3,11 +3,11 @@ import styles from './Dialogs.module.css'
 import DialogItem from './DialogItem/DialogItem'
 import Message from './Message/Message'
 import {useDispatch, useSelector} from 'react-redux'
-import {selectDialogs} from '../../Redux/dialogsSlice'
+import {selectDialogs} from '../../store/dialogsSlice'
 import {
 	addMessage,
 	selectMessages
-} from '../../Redux/messageSlice'
+} from '../../store/messageSlice'
 import WithAuthRedirect from '../../hoc/WithAuthRedirect'
 import {compose} from '@reduxjs/toolkit'
 import {ErrorMessage, Field, Form, Formik} from 'formik'

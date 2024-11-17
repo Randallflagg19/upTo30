@@ -1,21 +1,36 @@
 import React, {useEffect} from 'react'
 import './App.css'
 import Header from './components/Header/Header'
-import {Layout} from 'antd'
-import {Route, Routes} from 'react-router-dom'
+import {Layout, Spin} from 'antd'
+import {Route, Routes, useNavigate} from 'react-router-dom'
 import Translator from './components/Translator/Translator'
 import Home from './components/Home/Home'
-import {useDispatch} from 'react-redux'
-import {checkAuthThunk} from './Redux/authSlice'
+import {useDispatch, useSelector} from 'react-redux'
 import SocialNetwork from './components/SocialNetwork/SocialNetwork'
-import {AppDispatch} from './Redux/store'
+import {AppDispatch} from './store/store'
+import {checkAuthThunk, selectIsAuthChecked} from './store/authSlice'
 
 const App: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>()
+	const isAuthChecked = useSelector(selectIsAuthChecked)
+	const nav = useNavigate()
+	useEffect(() => {
+		dispatch(checkAuthThunk()) // Проверяем авторизацию при загрузке
+	}, [dispatch])
 
 	useEffect(() => {
-		dispatch(checkAuthThunk())
-	}, [dispatch])
+		nav('/sn/profile')
+	}, [])
+
+	// Пока авторизация не проверена, показываем загрузочный индикатор
+	if (!isAuthChecked) {
+		return (
+			<div
+				style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+				<Spin size="large"/>
+			</div>
+		)
+	}
 
 	return (
 		<Layout>
@@ -30,3 +45,4 @@ const App: React.FC = () => {
 }
 
 export default App
+

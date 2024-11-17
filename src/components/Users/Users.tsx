@@ -10,13 +10,13 @@ import {
 	toggleIsFetching,
 	selectIsFetching,
 	selectFollowingInProgress, unfollowUserById, followUserById, getUsersThunk
-} from '../../Redux/usersSlice'
+} from '../../store/usersSlice'
 import {UserType} from '../../types'
 import {Card, Button, List, Avatar, Input, Spin} from 'antd'
 import defaultAvatar from '../../assets/defaultAvatar.png'
 import Paginator from '../common/Paginator/Paginator'
 import {NavLink, useSearchParams} from 'react-router-dom'
-import {AppDispatch} from '../../Redux/store'
+import {AppDispatch} from '../../store/store'
 import styles from './Users.module.css'
 
 const Users = () => {

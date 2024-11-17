@@ -12,4 +12,5 @@ export const routesSocialNetwork = [
 	{path: 'settings', component: <div>Settings</div>, label: 'Settings'},
 	{path: 'users', component: <Users/>, label: 'Users'},
 	{path: 'login', component: <Login/>, label: 'Login'}
+
 ]

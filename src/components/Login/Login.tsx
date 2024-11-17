@@ -2,9 +2,9 @@ import React, {useState} from 'react'
 import {Formik, Form, Field, ErrorMessage} from 'formik'
 import * as Yup from 'yup'
 import {Input, Checkbox, Button} from 'antd'
-import {loginThunk, selectIsAuth, selectIsAuthChecked} from '../../Redux/authSlice'
+import {loginThunk, selectIsAuth, selectIsAuthChecked} from '../../store/authSlice'
 import {useDispatch, useSelector} from 'react-redux'
-import {AppDispatch} from '../../Redux/store'
+import {AppDispatch} from '../../store/store'
 import {Navigate} from 'react-router-dom'
 
 const validationSchema = Yup.object({

@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import {Typography, Input} from 'antd'
 import {useSelector, useDispatch} from 'react-redux'
-import {selectStatus, getStatusThunk, updateStatusThunk} from '../../Redux/profileSlice'
-import {AppDispatch} from '../../Redux/store'
+import {selectStatus, getStatusThunk, updateStatusThunk} from '../../store/profileSlice'
+import {AppDispatch} from '../../store/store'
 
 const {Text} = Typography
 

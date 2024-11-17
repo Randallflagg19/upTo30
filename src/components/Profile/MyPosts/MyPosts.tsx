@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {
 	addPost,
 	selectPosts
-} from '../../../Redux/profileSlice'
+} from '../../../store/profileSlice'
 import {Formik, Field, Form, ErrorMessage} from 'formik'
 import {
 	required,
