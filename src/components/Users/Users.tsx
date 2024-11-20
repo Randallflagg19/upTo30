@@ -11,13 +11,12 @@ import {
 	selectIsFetching,
 	selectFollowingInProgress, unfollowUserById, followUserById, getUsersThunk
 } from '../../store/usersSlice'
-import {UserType} from '../../types'
-import {Card, Button, List, Avatar, Input, Spin} from 'antd'
+import {List, Avatar, Input, Spin} from 'antd'
 import defaultAvatar from '../../assets/defaultAvatar.png'
 import Paginator from '../common/Paginator/Paginator'
-import {NavLink, useSearchParams} from 'react-router-dom'
+import {useSearchParams} from 'react-router-dom'
 import {AppDispatch} from '../../store/store'
-import styles from './Users.module.css'
+import User from './User'
 
 const Users = () => {
 	const dispatch = useDispatch<AppDispatch>()
@@ -38,6 +37,14 @@ const Users = () => {
 		setSearchParams({page: String(pageNumber)})
 		dispatch(setCurrentPage(pageNumber))
 		dispatch(toggleIsFetching(true))
+	}
+
+	const handleFollow = (userId: number) => {
+		dispatch(followUserById(userId))
+	}
+
+	const handleUnfollow = (userId: number) => {
+		dispatch(unfollowUserById(userId))
 	}
 
 	useEffect(() => {
@@ -64,43 +71,15 @@ const Users = () => {
 			) : (
 				<List
 					dataSource={users}
-					renderItem={(user: UserType) => (
-						<List.Item className={styles.listItem}>
-							<Card
-								title={<strong>{user.name}</strong>}
-								extra={user.followed ? (
-									<Button type="primary" danger
-									        disabled={followingInProgress.includes(user.id)}
-									        onClick={() => dispatch(unfollowUserById(user.id))}>
-										Отписаться
-									</Button>
-								) : (
-									<Button type="primary"
-									        disabled={followingInProgress.includes(user.id)}
-									        onClick={() => dispatch(followUserById(user.id))}>
-										Подписаться
-									</Button>
-								)}
-								className={styles.card}>
-								<NavLink to={`/sn/profile/${user.id}`}>
-									<Avatar
-										size={64}
-										src={user.photos.small || defaultAvatar}
-										alt={user.name}
-									/>
-								</NavLink>
-								<div style={{marginTop: '10px'}}>
-									<span>{user.status || 'Нет статуса'}</span>
-								</div>
-								<Input
-									placeholder="Обновить статус"
-									value={inputValues[user.id] || ''}
-									onChange={(e) => setInputValues({...inputValues, [user.id]: e.target.value})}
-									onBlur={() => handleStatusChange(user.id)}
-									style={{marginTop: '10px'}}
-								/>
-							</Card>
-						</List.Item>
+					renderItem={(user) => (
+						<User
+							user={user}
+							followingInProgress={followingInProgress}
+							onFollow={handleFollow}
+							onUnfollow={handleUnfollow}
+							onStatusChange={handleStatusChange}
+							defaultAvatar={defaultAvatar}
+						/>
 					)}
 				/>
 			)}

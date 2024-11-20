@@ -2,27 +2,25 @@ import React, {useEffect} from 'react'
 import './App.css'
 import Header from './components/Header/Header'
 import {Layout, Spin} from 'antd'
-import {Route, Routes, useNavigate} from 'react-router-dom'
-import Translator from './components/Translator/Translator'
-import Home from './components/Home/Home'
+import {Navigate, Route, Routes} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import SocialNetwork from './components/SocialNetwork/SocialNetwork'
 import {AppDispatch} from './store/store'
 import {checkAuthThunk, selectIsAuthChecked} from './store/authSlice'
+import LazyLoader from './utils/LazyLoader'
+
+// Ленивый импорт компонентов
+const Translator = React.lazy(() => import('./components/Translator/Translator'))
+const Home = React.lazy(() => import('./components/Home/Home'))
 
 const App: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>()
 	const isAuthChecked = useSelector(selectIsAuthChecked)
-	const nav = useNavigate()
+
 	useEffect(() => {
-		dispatch(checkAuthThunk()) // Проверяем авторизацию при загрузке
+		dispatch(checkAuthThunk())
 	}, [dispatch])
 
-	useEffect(() => {
-		nav('/sn/profile')
-	}, [])
-
-	// Пока авторизация не проверена, показываем загрузочный индикатор
 	if (!isAuthChecked) {
 		return (
 			<div
@@ -36,13 +34,13 @@ const App: React.FC = () => {
 		<Layout>
 			<Header/>
 			<Routes>
-				<Route path={'/sn/*'} element={<SocialNetwork/>}/>
-				<Route path="/translator/*" element={<Translator/>}/>
-				<Route path="/home" element={<Home/>}/>
+				<Route path="/sn/*" element={<SocialNetwork/>}/>
+				<Route path="/translator/*" element={<LazyLoader Component={Translator}/>}/>
+				<Route path="/home" element={<LazyLoader Component={Home}/>}/>
+				<Route path="/" element={<Navigate to="/sn/profile"/>}/>
 			</Routes>
 		</Layout>
 	)
 }
 
 export default App
-

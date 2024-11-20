@@ -13,53 +13,36 @@ export const getUsersThunk = createAsyncThunk(
 	}
 )
 
-export const followUserById = createAsyncThunk(
-	'users/followUserById',
-	async (userId: number, {rejectWithValue}) => {
+const toggleFollowThunk = (actionType: string, method: 'post' | 'delete') =>
+	createAsyncThunk(actionType, async (userId: number, {rejectWithValue}) => {
 		try {
-			const response = await usersAPI.follow(userId)
+			const response = await usersAPI.toggleFollow(userId, method)
 			if (response.resultCode === 0) {
 				return userId
 			}
 			else {
-				return rejectWithValue('Failed to follow user')
+				return rejectWithValue(`Failed to ${method === 'post' ? 'follow' : 'unfollow'} user`)
 			}
 		}
 		catch (error) {
 			return rejectWithValue((error as Error).message)
 		}
-	}
-)
+	})
 
-export const unfollowUserById = createAsyncThunk(
-	'users/unfollowUserById',
-	async (userId: number, {rejectWithValue}) => {
-		try {
-			const response = await usersAPI.unfollow(userId)
-			if (response.resultCode === 0) {
-				return userId
-			}
-			else {
-				return rejectWithValue('Failed to unfollow user')
-			}
-		}
-		catch (error) {
-			return rejectWithValue((error as Error).message)
-		}
-	}
-)
+export const followUserById = toggleFollowThunk('users/followUserById', 'post')
+export const unfollowUserById = toggleFollowThunk('users/unfollowUserById', 'delete')
 
-const initialState: UsersPageState =
-	{
-		users: [],
-		pageSize: 10,
-		totalUsersCount: 0,
-		currentPage: 1,
-		isFetching: false,
-		followingInProgress: [],
-		status: null,
-		error: null
-	}
+const initialState: UsersPageState = {
+	users: [],
+	pageSize: 10,
+	totalUsersCount: 0,
+	currentPage: 1,
+	isFetching: false,
+	followingInProgress: [],
+	status: null,
+	error: null
+}
+
 const usersSlice = createSlice({
 	name: 'users',
 	initialState,
@@ -99,36 +82,11 @@ const usersSlice = createSlice({
 			})
 	},
 	reducers: {
-		follow(state, action: PayloadAction<number>) {
-			const user = state.users.find(user => user.id === action.payload)
-			if (user) {
-				usersAPI.follow(user.id)
-					.then((response) => {
-						if (response.resultCount === 0) {
-							user.followed = true
-						}
-					})
-			}
-		},
-		unfollow(state, action: PayloadAction<number>) {
-			const user = state.users.find(user => user.id === action.payload)
-			if (user) {
-				usersAPI.unfollow(user.id)
-					.then((response) => {
-						if (response.resultCount === 0) {
-							user.followed = false
-						}
-					})
-			}
-		},
 		updateStatus(state, action: PayloadAction<{ userId: number; status: string | null }>) {
-			const user = state.users.find(user => user.id === action.payload.userId)
+			const user = state.users.find((user) => user.id === action.payload.userId)
 			if (user) {
 				user.status = action.payload.status
 			}
-		},
-		setUsers(state, action: PayloadAction<{ users: UserType[] }>) {
-			state.users = action.payload.users
 		},
 		setCurrentPage(state, action: PayloadAction<number>) {
 			state.currentPage = action.payload
@@ -138,17 +96,7 @@ const usersSlice = createSlice({
 		},
 		toggleIsFetching(state, action: PayloadAction<boolean>) {
 			state.isFetching = action.payload
-		},
-		toggleFollowingInProgress(state, action: PayloadAction<[boolean, number]>) {
-			const [isFetching, id] = action.payload
-			if (isFetching) {
-				state.followingInProgress.push(id)
-			}
-			else {
-				state.followingInProgress = state.followingInProgress.filter(userId => userId !== id)
-			}
 		}
-
 	}
 })
 
@@ -158,8 +106,6 @@ export const selectIsFetching = (state: RootState) => state.usersPage.isFetching
 export const selectTotalCount = (state: RootState) => state.usersPage.totalUsersCount
 export const selectCurrentPage = (state: RootState) => state.usersPage.currentPage
 export const selectPageSize = (state: RootState) => state.usersPage.pageSize
-export const {
-	follow, toggleIsFetching, unfollow, updateStatus,
-	setUsers, setCurrentPage, setTotalUsersCount
-} = usersSlice.actions
+
+export const {toggleIsFetching, updateStatus, setCurrentPage} = usersSlice.actions
 export const usersReducer = usersSlice.reducer
