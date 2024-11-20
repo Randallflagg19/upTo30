@@ -9,13 +9,18 @@ const SocialNetworkNavigation = () => {
 	const userId = useSelector(selectUserId)
 	const location = useLocation()
 
-	const menuItems = routesSocialNetwork.map(route => ({
+	// Подготавливаем маршруты для меню
+	const preparedRoutes = routesSocialNetwork
+		.filter(route => route.label !== 'Login') // Убираем Login
+		.map(route => ({
+			...route,
+			path: route.label === 'Моя страница' && userId ? `/sn/profile/${userId}` : route.path // Обрабатываем "Моя страница"
+		}))
+
+	// Генерируем элементы меню
+	const menuItems = preparedRoutes.map(route => ({
 		key: route.path,
-		label: route.label === 'Моя страница' ? (
-			<Link to={userId ? `/sn/profile/${userId}` : '/sn/profile'}>{route.label}</Link>
-		) : (
-			<Link to={route.path}>{route.label}</Link>
-		)
+		label: <Link to={route.path}>{route.label}</Link>
 	}))
 
 	return (

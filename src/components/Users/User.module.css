@@ -1,0 +1,19 @@
+.selectedPage {
+    font-weight: bold;
+}
+
+.card {
+    width: 300px;
+}
+
+.preloaderOverlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.listItem {
+    display: flex;
+    justify-content: center;
+}
