@@ -10,6 +10,7 @@ import {checkAuthThunk, selectIsAuthChecked} from './store/authSlice'
 import LazyLoader from './utils/LazyLoader'
 
 // Ленивый импорт компонентов
+// Ленивый импорт компонентов
 const Translator = React.lazy(() => import('./components/Translator/Translator'))
 const Home = React.lazy(() => import('./components/Home/Home'))
 
