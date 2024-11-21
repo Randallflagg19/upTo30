@@ -7,12 +7,14 @@ import {AppDispatch} from '../../store/store'
 const {Text} = Typography
 
 interface ProfileStatusProps {
-	userId: string | null
+	userId: string | null,
+	isOwnProfile: boolean
 }
 
-const ProfileStatus: React.FC<ProfileStatusProps> = ({userId}) => {
+const ProfileStatus: React.FC<ProfileStatusProps> = ({userId, isOwnProfile}) => {
 	const dispatch = useDispatch<AppDispatch>()
 	const userStatus = useSelector(selectStatus)
+
 	const [status, setStatus] = useState(userStatus || 'No status yet')
 	const [editMode, setEditMode] = useState(false)
 
@@ -31,7 +33,9 @@ const ProfileStatus: React.FC<ProfileStatusProps> = ({userId}) => {
 	}
 
 	const activateEditMode = () => {
-		setEditMode(true)
+		if (isOwnProfile) {
+			setEditMode(true)
+		}
 	}
 
 	const deactivateEditMode = () => {
@@ -45,9 +49,13 @@ const ProfileStatus: React.FC<ProfileStatusProps> = ({userId}) => {
 		<div>
 			{!editMode ? (
 				<Text
-					style={{cursor: 'pointer', fontSize: '16px', color: '#555'}}
-					editable={{onStart: activateEditMode}}
-					onDoubleClick={activateEditMode}
+					style={{
+						cursor: isOwnProfile ? 'pointer' : 'default', // Скрытие интерактивности
+						fontSize: '16px',
+						color: '#555'
+					}}
+					editable={isOwnProfile ? {onStart: activateEditMode} : false}
+					onDoubleClick={isOwnProfile ? activateEditMode : undefined}
 				>
 					{status}
 				</Text>

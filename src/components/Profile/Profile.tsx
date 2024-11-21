@@ -16,20 +16,24 @@ const Profile: React.FC = () => {
 	const profile = useSelector(selectProfile)
 	const {userId} = useParams<{ userId: string }>()
 	const authedUserId = useSelector(selectUserId)
+	const isOwnProfile = Number(userId) === authedUserId
 
+	//грузим профиль
 	useEffect(() => {
+		//если никто не выбран грузим профиль авторизованного пользователя
 		if (!userId && authedUserId) {
 			navigate(`/sn/profile/${authedUserId}`, {replace: true})
 		}
+		//если выбран то грузим его
 		else if (userId) {
 			dispatch(getUserProfileThunk(userId))
 		}
 	}, [dispatch, userId, authedUserId, navigate])
-
 	return (
 		<div className={styles.content}>
 			{profile ? (
-				<ProfileInfo profile={profile} userId={(userId || authedUserId) as string}/>
+				<ProfileInfo profile={profile} isOwnProfile={isOwnProfile}
+				             userId={(userId || authedUserId) as string}/>
 			) : (
 				<Spin/>
 			)}

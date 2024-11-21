@@ -48,20 +48,37 @@ export const updateStatusThunk = createAsyncThunk<void, string, { state: RootSta
 	}
 )
 /////////
+
+export const savePhotoThunk = createAsyncThunk<{ small: string; large: string }, File, {
+	state: RootState
+}>(
+	'profile/savePhoto',
+	async (photoFile) => {
+		const photos = await profileAPI.savePhoto(photoFile)
+
+		return photos
+	}
+)
+
 const profileSlice = createSlice({
 	name: 'profile',
 	initialState,
 	extraReducers: (builder) => {
 		builder
 			.addCase(getUserProfileThunk.fulfilled, (state, action) => {
-					state.profile = action.payload
-				}
-			)
+				state.profile = action.payload
+			})
 			.addCase(getStatusThunk.fulfilled, (state, action) => {
 				state.status = action.payload
 			})
 			.addCase(updateStatusThunk.fulfilled, (state, action) => {
-				state.status = action.meta.arg  // обновляем статус в состоянии
+				state.status = action.meta.arg
+			})
+			.addCase(savePhotoThunk.fulfilled, (state, action) => {
+				if (state.profile) {
+					state.profile.photos = action.payload
+
+				}
 			})
 	},
 	reducers: {
