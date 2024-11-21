@@ -1,1 +1,0 @@
-{"version":3,"file":"static/js/432.5b39dca0.chunk.js","mappings":"kJAEA,MAQA,EARaA,KAEXC,EAAAA,EAAAA,KAAA,OAAAC,SAAK,Q","sources":["components/Home/Home.tsx"],"sourcesContent":["import React from 'react'\n\nconst Home = () => {\n\treturn (\n\t\t<div>\n\t\t\tHome\n\t\t</div>\n\t)\n}\n\nexport default Home"],"names":["Home","_jsx","children"],"sourceRoot":""}
