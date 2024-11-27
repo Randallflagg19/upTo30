@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {RootState} from './store'
-import {UsersPageState, UserType} from '../types'
+import {UsersPageState} from '../types'
 import {usersAPI} from '../api/usersAPI'
 
 export const getUsersThunk = createAsyncThunk(

@@ -11,9 +11,9 @@ export const authAPI = {
 		const res = await axiosInstance.get(`auth/me`)
 		return res.data
 	},
-	login: async (email: string, password: string, rememberMe: boolean = false) => {
+	login: async (email: string, password: string, rememberMe: boolean = false, captcha?: string) => {
 		const res = await axiosInstance.post(`/auth/login`, {
-			email, password, rememberMe
+			email, password, rememberMe, captcha
 		})
 		return res.data
 	},

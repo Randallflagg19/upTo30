@@ -20,6 +20,9 @@ export const profileAPI = {
 			}
 		})
 		return res.data.data.photos
+	},
+	saveProfile: async (profile: any) => {
+		return await axiosInstance.put(`profile`, profile)
 	}
 }
 

@@ -1,8 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {RootState} from './store'
-import {DialogsPageState} from '../types'
+import {DialogType} from '../types'
 
-const initialState: DialogsPageState = {
+const initialState = {
 	dialogs: [
 		{id: 1, name: 'name1'},
 		{id: 2, name: 'name2'},
@@ -10,7 +10,7 @@ const initialState: DialogsPageState = {
 		{id: 4, name: 'name4'},
 		{id: 5, name: 'name5'},
 		{id: 6, name: 'name6'}
-	]
+	] as Array<DialogType>
 }
 
 const dialogsSlice = createSlice({

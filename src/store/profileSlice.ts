@@ -1,12 +1,12 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {PostType} from './../types'
+import {PostType, ProfileType} from '../types'
 import {RootState} from './store'
 import {profileAPI} from '../api/profileAPI'
 
 type ProfilePageState = {
 	posts: PostType[]
 	newPostText: string
-	profile: null | any
+	profile: null | ProfileType
 	status: string;
 }
 
@@ -23,7 +23,7 @@ const initialState: ProfilePageState = {
 	status: ''
 }
 
-export const getUserProfileThunk = createAsyncThunk<any, string, { state: RootState }>(
+export const getUserProfileThunk = createAsyncThunk<ProfileType, string, { state: RootState }>(
 	'profile/getUserProfile',
 	async (userId: string, {dispatch}) => {
 		const data = await profileAPI.getUserProfile(userId)
@@ -54,9 +54,35 @@ export const savePhotoThunk = createAsyncThunk<{ small: string; large: string },
 }>(
 	'profile/savePhoto',
 	async (photoFile) => {
-		const photos = await profileAPI.savePhoto(photoFile)
+		return await profileAPI.savePhoto(photoFile)
+	}
+)
 
-		return photos
+export const saveProfileDescriptionThunk = createAsyncThunk<
+	void, // тип возвращаемого значения
+	ProfileType, // тип передаваемого параметра
+	{ state: RootState } // типы аргументов для контекста
+>(
+	'profile/saveProfileDescription',
+	async (profileData, {dispatch, rejectWithValue}) => {
+		try {
+			// Отправка данных профиля на сервер
+			await profileAPI.saveProfile(profileData)
+
+			// Обновление данных профиля в состоянии
+			dispatch(setUserProfile(profileData))
+		}
+		catch (error: unknown) {
+			if (error instanceof Error) {
+				console.error('Failed to save profile:', error.message)
+				// В случае ошибки возвращаем её для обработки в компоненте
+				return rejectWithValue(error.message)
+			}
+			else {
+				console.error('An unknown error occurred')
+				return rejectWithValue('An unknown error occurred')
+			}
+		}
 	}
 )
 
@@ -91,7 +117,7 @@ const profileSlice = createSlice({
 			state.posts = [...state.posts, newPost]
 			state.newPostText = ''
 		},
-		setUserProfile(state, action: PayloadAction<any>) {
+		setUserProfile(state, action: PayloadAction<ProfileType>) {
 			state.profile = action.payload
 		},
 		setStatus(state, action: PayloadAction<string>) {

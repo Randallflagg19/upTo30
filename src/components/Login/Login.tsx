@@ -2,23 +2,40 @@ import React, {useState} from 'react'
 import {Formik, Form, Field, ErrorMessage} from 'formik'
 import * as Yup from 'yup'
 import {Input, Checkbox, Button} from 'antd'
-import {loginThunk, selectIsAuth, selectIsAuthChecked} from '../../store/authSlice'
+import {
+	loginThunk,
+	selectIsAuth,
+	selectIsAuthChecked,
+	selectCaptchaURL
+} from '../../store/authSlice'
 import {useDispatch, useSelector} from 'react-redux'
 import {AppDispatch} from '../../store/store'
 import {Navigate} from 'react-router-dom'
 
 const validationSchema = Yup.object({
-	email: Yup.string().min(2, 'Минимум 2 символа').max(50, 'Максимум 50 символов').required('Обязательное поле'),
-	password: Yup.string().min(2, 'Минимум 2 символа').max(50, 'Максимум 50 символов').required('Обязательное поле')
+	email: Yup.string()
+		.min(2, 'Минимум 2 символа')
+		.max(50, 'Максимум 50 символов')
+		.required('Обязательное поле'),
+	password: Yup.string()
+		.min(2, 'Минимум 2 символа')
+		.max(50, 'Максимум 50 символов')
+		.required('Обязательное поле'),
+	captcha: Yup.string().when('captchaURL', {
+		is: (captchaURL: string | undefined) => !!captchaURL, // Проверяем наличие captchaURL
+		then: (schema) => schema.required('Обязательное поле'), // Если есть, делаем обязательным
+		otherwise: (schema) => schema.notRequired() // Если нет, делаем необязательным
+	})
 })
 
 const LoginForm = () => {
 	const dispatch = useDispatch<AppDispatch>()
+	const captchaURL = useSelector(selectCaptchaURL)
 	const [errorMessage, setErrorMessage] = useState<string | null>(null) // Локальное состояние ошибки
 
 	return (
 		<Formik
-			initialValues={{email: '', password: '', rememberMe: false}}
+			initialValues={{email: '', password: '', rememberMe: false, captcha: ''}}
 			validationSchema={validationSchema}
 			onSubmit={async (values, {setSubmitting}) => {
 				try {
@@ -69,6 +86,27 @@ const LoginForm = () => {
 							{({field}: any) => <Checkbox {...field}>Remember me</Checkbox>}
 						</Field>
 					</div>
+
+					{/* Отображение капчи */}
+					{captchaURL && (
+						<div>
+							<div style={{marginBottom: '10px'}}>
+								<img src={captchaURL} alt="Captcha"/>
+							</div>
+							<Field name="captcha">
+								{({field}: any) => (
+									<Input
+										{...field}
+										placeholder="Введите капчу"
+										status={errors.captcha && touched.captcha ? 'error' : ''}
+									/>
+								)}
+							</Field>
+							<ErrorMessage name="captcha">
+								{(msg) => <div style={{color: 'red'}}>{msg}</div>}
+							</ErrorMessage>
+						</div>
+					)}
 
 					{/* Отображение ошибки */}
 					{errorMessage && <div style={{color: 'red', marginBottom: '10px'}}>{errorMessage}</div>}

@@ -6,32 +6,28 @@ const initialState = {
 	initialized: false
 }
 
-// Thunk для инициализации приложения
-export const initializeAppThunk = createAsyncThunk(
-	'app/initializeApp',
-	async (_, {dispatch}) => {
-		// Дожидаемся выполнения всех промисов
-		await Promise.all([
-			dispatch(checkAuthThunk()).unwrap()
-		])
-		dispatch(setInitialized())
-	}
-)
+export const initializeAppThunk =
+	createAsyncThunk<void, void, { state: RootState }>(
+		'app/initializeApp',
+		async (_, {dispatch}) => {
+			await Promise.all([
+				dispatch(checkAuthThunk()).unwrap()
+			])
+			dispatch(setInitialized())
+		}
+	)
 
-// Срез для управления состоянием инициализации
 const appSlice = createSlice({
 	name: 'app',
 	initialState,
 	reducers: {
 		setInitialized(state) {
-			state.initialized = true // Обновляем значение напрямую
+			state.initialized = true
 		}
 	}
 })
 
-// Экспорт действий и редюсера
 export const {setInitialized} = appSlice.actions
 export const appReducer = appSlice.reducer
 
-// Селектор состояния инициализации
-export const selectIsInitialized = (state: RootState) => state.app.initialized
+export const selectIsInitialized = (state: RootState): boolean => state.app.initialized
