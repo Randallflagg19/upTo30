@@ -1,12 +1,12 @@
 import React, {Suspense} from 'react'
 import {Spin} from 'antd'
+import styles from './LazyLoader.module.css'
 
 const LazyLoader: React.FC<{ Component: React.FC }> = ({Component}) => {
 	return (
 		<Suspense
 			fallback={
-				<div
-					style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+				<div className={styles.fallbackContainer}>
 					<Spin size="large"/>
 				</div>
 			}

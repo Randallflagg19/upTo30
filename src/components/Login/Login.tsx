@@ -1,124 +1,9 @@
-import React, {useState} from 'react'
-import {Formik, Form, Field, ErrorMessage} from 'formik'
-import * as Yup from 'yup'
-import {Input, Checkbox, Button} from 'antd'
-import {
-	loginThunk,
-	selectIsAuth,
-	selectIsAuthChecked,
-	selectCaptchaURL
-} from '../../store/authSlice'
-import {useDispatch, useSelector} from 'react-redux'
-import {AppDispatch} from '../../store/store'
+import React from 'react'
+import {selectIsAuth, selectIsAuthChecked} from '../../store/authSlice'
+import {useSelector} from 'react-redux'
 import {Navigate} from 'react-router-dom'
-
-const validationSchema = Yup.object({
-	email: Yup.string()
-		.min(2, 'Минимум 2 символа')
-		.max(50, 'Максимум 50 символов')
-		.required('Обязательное поле'),
-	password: Yup.string()
-		.min(2, 'Минимум 2 символа')
-		.max(50, 'Максимум 50 символов')
-		.required('Обязательное поле'),
-	captcha: Yup.string().when('captchaURL', {
-		is: (captchaURL: string | undefined) => !!captchaURL, // Проверяем наличие captchaURL
-		then: (schema) => schema.required('Обязательное поле'), // Если есть, делаем обязательным
-		otherwise: (schema) => schema.notRequired() // Если нет, делаем необязательным
-	})
-})
-
-const LoginForm = () => {
-	const dispatch = useDispatch<AppDispatch>()
-	const captchaURL = useSelector(selectCaptchaURL)
-	const [errorMessage, setErrorMessage] = useState<string | null>(null) // Локальное состояние ошибки
-
-	return (
-		<Formik
-			initialValues={{email: '', password: '', rememberMe: false, captcha: ''}}
-			validationSchema={validationSchema}
-			onSubmit={async (values, {setSubmitting}) => {
-				try {
-					await dispatch(loginThunk(values)).unwrap() // unwrap позволяет выбросить ошибку
-					setErrorMessage(null) // Сбрасываем ошибку при успешном логине
-				}
-				catch (error) {
-					setErrorMessage(error as string) // Устанавливаем сообщение об ошибке
-				} finally {
-					setSubmitting(false)
-				}
-			}}
-		>
-			{({errors, touched, isSubmitting}) => (
-				<Form style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
-					<div>
-						<Field name="email">
-							{({field}: any) => (
-								<Input
-									{...field}
-									placeholder="Email"
-									status={errors.email && touched.email ? 'error' : ''}
-								/>
-							)}
-						</Field>
-						<ErrorMessage name="email">
-							{(msg) => <div style={{color: 'red'}}>{msg}</div>}
-						</ErrorMessage>
-					</div>
-
-					<div>
-						<Field name="password">
-							{({field}: any) => (
-								<Input.Password
-									{...field}
-									placeholder="Password"
-									status={errors.password && touched.password ? 'error' : ''}
-								/>
-							)}
-						</Field>
-						<ErrorMessage name="password">
-							{(msg) => <div style={{color: 'red'}}>{msg}</div>}
-						</ErrorMessage>
-					</div>
-
-					<div>
-						<Field name="rememberMe" type="checkbox">
-							{({field}: any) => <Checkbox {...field}>Remember me</Checkbox>}
-						</Field>
-					</div>
-
-					{/* Отображение капчи */}
-					{captchaURL && (
-						<div>
-							<div style={{marginBottom: '10px'}}>
-								<img src={captchaURL} alt="Captcha"/>
-							</div>
-							<Field name="captcha">
-								{({field}: any) => (
-									<Input
-										{...field}
-										placeholder="Введите капчу"
-										status={errors.captcha && touched.captcha ? 'error' : ''}
-									/>
-								)}
-							</Field>
-							<ErrorMessage name="captcha">
-								{(msg) => <div style={{color: 'red'}}>{msg}</div>}
-							</ErrorMessage>
-						</div>
-					)}
-
-					{/* Отображение ошибки */}
-					{errorMessage && <div style={{color: 'red', marginBottom: '10px'}}>{errorMessage}</div>}
-
-					<Button type="primary" htmlType="submit" loading={isSubmitting}>
-						Login
-					</Button>
-				</Form>
-			)}
-		</Formik>
-	)
-}
+import {LoginForm} from './LoginForm'
+import styles from './Login.module.css'
 
 const Login = () => {
 	const isAuth = useSelector(selectIsAuth)
@@ -136,9 +21,7 @@ const Login = () => {
 
 	// Если пользователь не авторизован, рендерим страницу логина
 	return (
-		<div
-			style={{maxWidth: '300px', margin: '0 auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px'}}
-		>
+		<div className={styles.loginContainer}>
 			<h1>Login</h1>
 			<LoginForm/>
 		</div>

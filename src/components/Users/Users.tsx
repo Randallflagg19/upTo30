@@ -11,7 +11,7 @@ import {
 	selectIsFetching,
 	selectFollowingInProgress, unfollowUserById, followUserById, getUsersThunk
 } from '../../store/usersSlice'
-import {List, Avatar, Input, Spin} from 'antd'
+import {List, Spin} from 'antd'
 import defaultAvatar from '../../assets/defaultAvatar.png'
 import Paginator from '../common/Paginator/Paginator'
 import {useSearchParams} from 'react-router-dom'
@@ -22,7 +22,9 @@ const Users = () => {
 	const dispatch = useDispatch<AppDispatch>()
 	const users = useSelector(selectUsers)
 	const isFetching = useSelector(selectIsFetching)
+
 	const [inputValues, setInputValues] = useState<{ [key: number]: string }>({})
+
 	const totalUsersCount = useSelector(selectTotalCount)
 	const currentPage = useSelector(selectCurrentPage)
 	const pageSize = useSelector(selectPageSize)

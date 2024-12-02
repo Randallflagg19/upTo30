@@ -15,4 +15,7 @@ const rootReducer = combineReducers({
 	app: appReducer
 })
 
+type RootReducerType = typeof rootReducer
+type AppStateType = ReturnType<RootReducerType>
+
 export default rootReducer

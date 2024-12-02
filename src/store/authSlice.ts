@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {RootState} from './store'
 import {authAPI} from '../api/authAPI'
 import {securityAPI} from '../api/securityAPI'
+import {ResultCodeForCaptcha, ResultCodesEnum} from '../api/api'
 
 type LoginData = {
 	email: string
@@ -41,8 +42,8 @@ export const checkAuthThunk = createAsyncThunk(
 	'auth/checkAuth',
 	async (_, {dispatch}) => {
 		const response = await authAPI.checkAuth()
-		if (response.resultCode === 0) {
-			dispatch(setAuthUserData({data: response.data, isAuth: true}))
+		if (response.resultCode === ResultCodesEnum.Success) {
+			dispatch(setAuthUserData({data: {...response.data, isAuth: true}}))
 		}
 		dispatch(setAuthChecked(true))
 	}
@@ -53,10 +54,10 @@ export const loginThunk = createAsyncThunk(
 		captcha?: string
 	}, {dispatch, rejectWithValue}) => {
 		const response = await authAPI.login(email, password, rememberMe, captcha)
-		if (response.resultCode === 0) {
+		if (response.resultCode === ResultCodesEnum.Success) {
 			dispatch(checkAuthThunk())
 		}
-		else if (response.resultCode === 10) { // Ошибка капчи
+		else if (response.resultCode === ResultCodeForCaptcha.CaptchaIsRequired) {
 			dispatch(getCaptchaURLThunk()) // Получаем URL новой капчи
 			return rejectWithValue('Требуется капча')
 		}
@@ -80,10 +81,9 @@ export const logoutThunk = createAsyncThunk(
 	'auth/logout',
 	async (_, {dispatch}) => {
 		const response = await authAPI.logout()
-		if (response.data.resultCode === 0) {
+		if (response.data.resultCode === ResultCodesEnum.Success) {
 			dispatch(setAuthUserData({
-				data: {id: null, email: null, login: null, isAuth: false},
-				isAuth: false
+				data: {id: null, email: null, login: null, isAuth: false}
 			}))
 		}
 	}
@@ -93,8 +93,8 @@ const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
-		setAuthUserData(state, action: PayloadAction<{ data: UserAuthInfo; isAuth: boolean }>) {
-			state.data = {...action.payload.data, isAuth: action.payload.isAuth}
+		setAuthUserData(state, action: PayloadAction<{ data: UserAuthInfo }>) {
+			state.data = {...action.payload.data, isAuth: action.payload.data.isAuth}
 		},
 		setAuthChecked(state, action: PayloadAction<boolean>) {
 			state.isAuthChecked = action.payload

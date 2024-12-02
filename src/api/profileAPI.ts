@@ -1,4 +1,5 @@
 import {axiosInstance} from './api'
+import {ProfileType} from '../types'
 
 export const profileAPI = {
 	getUserProfile: async (userId: string) => {
@@ -21,7 +22,7 @@ export const profileAPI = {
 		})
 		return res.data.data.photos
 	},
-	saveProfile: async (profile: any) => {
+	saveProfile: async (profile: ProfileType) => {
 		return await axiosInstance.put(`profile`, profile)
 	}
 }

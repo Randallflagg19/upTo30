@@ -6,7 +6,7 @@ type PropsType = {
 	totalItemsCount: number,
 	pageSize: number,
 	currentPageNumber: number,
-	onPageChanged?: (pageNumber: number) => void,
+	onPageChanged: (pageNumber: number) => void,
 	portionSize?: number
 }
 

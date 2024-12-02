@@ -3,18 +3,20 @@ import {RootState} from './store'
 import {UsersPageState} from '../types'
 import {usersAPI} from '../api/usersAPI'
 
-export const getUsersThunk = createAsyncThunk(
-	'users/getUsers',
-	async ({currentPage, pageSize}: { currentPage: number; pageSize: number }, {dispatch}) => {
-		dispatch(toggleIsFetching(true))
-		const data = await usersAPI.getUsers(currentPage, pageSize)
-		dispatch(toggleIsFetching(false))
-		return {users: data.items, totalCount: data.totalCount}
-	}
-)
+const initialState: UsersPageState = {
+	users: [],
+	pageSize: 10,
+	totalUsersCount: 0,
+	currentPage: 1,
+	isFetching: false,
+	followingInProgress: [],
+	status: null,
+	error: null
+}
 
 const toggleFollowThunk = (actionType: string, method: 'post' | 'delete') =>
-	createAsyncThunk(actionType, async (userId: number, {rejectWithValue}) => {
+	createAsyncThunk<number, number, { rejectValue: string }>
+	(actionType, async (userId: number, {rejectWithValue}) => {
 		try {
 			const response = await usersAPI.toggleFollow(userId, method)
 			if (response.resultCode === 0) {
@@ -32,16 +34,18 @@ const toggleFollowThunk = (actionType: string, method: 'post' | 'delete') =>
 export const followUserById = toggleFollowThunk('users/followUserById', 'post')
 export const unfollowUserById = toggleFollowThunk('users/unfollowUserById', 'delete')
 
-const initialState: UsersPageState = {
-	users: [],
-	pageSize: 10,
-	totalUsersCount: 0,
-	currentPage: 1,
-	isFetching: false,
-	followingInProgress: [],
-	status: null,
-	error: null
-}
+export const getUsersThunk = createAsyncThunk(
+	'users/getUsers',
+	async ({currentPage, pageSize}: {
+		currentPage: number;
+		pageSize: number
+	}, {dispatch, getState}) => {
+		dispatch(toggleIsFetching(true))
+		const data = await usersAPI.getUsers(currentPage, pageSize)
+		dispatch(toggleIsFetching(false))
+		return {users: data.items, totalCount: data.totalCount}
+	}
+)
 
 const usersSlice = createSlice({
 	name: 'users',
